@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-public class SemanticAnalyzer : MonoBehaviour
+public class SemanticAnalyzer 
 {
    public static bool SemancticError;
 
@@ -135,6 +136,44 @@ public class SemanticAnalyzer : MonoBehaviour
             }
             
         }
-
-        
+  
+        ///<summary>
+        ///Metodo utlizado para generar la lista de Tokens q posteriormente analizara AST
+        ///</summary>
+        public static List<Token> ContextOfPower(List<Token> actually , int init , int final)
+        {
+            List<Token> Power = new List<Token>();
+              for(int i = init ; i < final ; i++)
+              {
+                if(actually[i].Type != TypeToken.Number && actually[i].Type != TypeToken.Sum && actually[i].Type != TypeToken.Rest && actually[i].Type != TypeToken.Division && actually[i].Type != TypeToken.Multiplication)
+                {
+                    break;
+                }
+                Power.Add(actually[i]);
+              }
+              return Power;
+        }
+          public static int PosFinalOfPower(List<Token> actually , int init , int final)
+        {
+              int PowerFinal =  0;
+              for(int i = init ; i < final ; i++)
+              {
+                if(actually[i].Type != TypeToken.Number && actually[i].Type != TypeToken.Sum && actually[i].Type != TypeToken.Rest && actually[i].Type != TypeToken.Division && actually[i].Type != TypeToken.Multiplication)
+                {
+                    PowerFinal = i;
+                    break;
+                }
+                
+              }
+              if(PowerFinal == 0)
+              {
+                PowerFinal = final ;
+              }
+              else
+              {
+                PowerFinal -=1;
+              }
+              
+              return PowerFinal;
+        }
 }

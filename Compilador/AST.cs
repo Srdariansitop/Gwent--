@@ -65,6 +65,7 @@ public class AST
             }
             else if (NumberorNot(tokens))
             {
+                
                 if (tokens.Count == 1)
                 {
                     Node Number = new Node(null, tokens[0].Value);

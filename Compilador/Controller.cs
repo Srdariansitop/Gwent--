@@ -22,6 +22,7 @@ public class Controller : MonoBehaviour
           Debug.Log(CompilerCard.Name);
           Debug.Log(CompilerCard.Faction);
           Debug.Log(CompilerCard.Type);
+          Debug.Log(CompilerCard.Power);
           if(CompilerCard.Range != null)
           {
             for(int i = 0 ; i < CompilerCard.Range.Length;i++)

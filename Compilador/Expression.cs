@@ -87,7 +87,7 @@ public class Expression : MonoBehaviour
             }
             else
             {
-                return (int)node.Value;
+              return Convert.ToInt32(node.Value);
             }
         }
 
