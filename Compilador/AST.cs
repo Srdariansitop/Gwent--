@@ -32,6 +32,7 @@ public class AST
                 }
                 else
                 {
+                    Controller.ErrorExpresionPower(tokens);
                     Controller.ErrorExpected('#');
                     SemanticAnalyzer.SemancticError = true;
                     return;
@@ -60,7 +61,10 @@ public class AST
                 }
                 else
                 {
-                    //ERRRO
+                    Controller.ErrorExpresionPower(tokens);
+                    Controller.ErrorExpected('#');
+                    SemanticAnalyzer.SemancticError = true;
+                    return;
                 }
             }
             else if (NumberorNot(tokens))
@@ -81,7 +85,9 @@ public class AST
                 }
                 else
                 {
-                    
+                    Controller.ErrorExpresionPower(tokens);
+                    SemanticAnalyzer.SemancticError = true;
+                    return;
                 }
             }
             else

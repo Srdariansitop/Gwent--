@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class Expression : MonoBehaviour
 {
+    ///<summary>
+    ///Este metodo es el encargado de Evaluar todas las expresiones creadas en el contexto de Card
+    ///</summary>
     public static void Evaluate (List<Token> actually)
     {
         
@@ -22,10 +25,6 @@ public class Expression : MonoBehaviour
           }
           else if(CompilerCard.Range == null && actually[0].Type == TypeToken.Range)
           {
-            for(int i = 0 ; i < actually.Count;i++)
-            {
-              Debug.Log(actually[i].Value);
-            }
             List<string> Ranges = new List<string>();
             for(int i = 2 ; i < actually.Count;i++)
             {
@@ -64,6 +63,9 @@ public class Expression : MonoBehaviour
     }
   
 
+    ///<summary>
+    ///Este metodo es el encargado de Evaluar el Arbol de Sintaxis abstracta generado por el Parser
+    ///</summary>
      public static int EvaluateTree(Node node)
         {
             if(node.Value is char)

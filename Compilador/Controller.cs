@@ -8,8 +8,10 @@ using UnityEngine.UI;
 public class Controller : MonoBehaviour
 {
     public InputField inputField;
+    public CardObject cardObject;
     public void ClickBotton()
     {
+       cardObject = FindObjectOfType<CardObject>();
        Reset();
        string text = inputField.text;
        Lexer lexer = new Lexer();
@@ -30,6 +32,7 @@ public class Controller : MonoBehaviour
               Debug.Log(CompilerCard.Range[i]);
             }
           }
+          cardObject.InstanciateNewCard(CompilerCard.Power,CompilerCard.Name,CompilerCard.Faction,CompilerCard.Type,CompilerCard.Range);
           }
        
        }
@@ -58,6 +61,9 @@ public class Controller : MonoBehaviour
            Debug.Log("Invalid expression "  + Expresion + " within the context Power" );
         }
 
+      ///<summary>
+      ///Este metodo es el encargado de limpiar todos los valores estaticos generados por el InputField
+      ///</summary>
         public static void Reset()
         {
           Lexer.ErrorLexer = new bool();
@@ -66,5 +72,6 @@ public class Controller : MonoBehaviour
           CompilerCard.Range = null;
           CompilerCard.Type = null;
           CompilerCard.Faction = null;
+          CompilerCard.PowerBool = new bool();
         }
 }
