@@ -9,6 +9,7 @@ public class Controller : MonoBehaviour
 {
     public InputField inputField;
     public CardObject cardObject;
+    public static int NumCard;
     public void ClickBotton()
     {
        cardObject = FindObjectOfType<CardObject>();
@@ -32,12 +33,40 @@ public class Controller : MonoBehaviour
               Debug.Log(CompilerCard.Range[i]);
             }
           }
-          cardObject.InstanciateNewCard(CompilerCard.Power,CompilerCard.Name,CompilerCard.Faction,CompilerCard.Type,CompilerCard.Range);
+          if(CompleteCard())
+          {
+            cardObject.InstanciateNewCard(CompilerCard.Power,CompilerCard.Name,CompilerCard.Faction,CompilerCard.Type,CompilerCard.Range);
+          }
+          
           }
        
        }
       
     } 
+
+     public static bool CompleteCard()
+        {
+            if(CompilerCard.Name != null && CompilerCard.Range != null && CompilerCard.Faction != null && CompilerCard.Type != null)
+            {
+                if(CompilerCard.Type == "Silver" ||CompilerCard.Type == "Gold" || CompilerCard.Type == "Meele" ||CompilerCard.Type == "Distance"||CompilerCard.Type ==  "Siege" )
+                {
+                   if(CompilerCard.PowerBool == true)
+                   {
+                       return true;
+                   }
+                   else
+                   {
+                      return false;
+                   }
+                }
+                else
+                {
+                  return true;
+                }
+            }
+            return false;
+        }
+
    
         public static void ErrorToken(string token)
         {
