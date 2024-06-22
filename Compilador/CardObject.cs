@@ -27,6 +27,10 @@ public class CardObject : MonoBehaviour
    Faction = faction;
    Type = type;
    Range = range;
+   if(Type == "Clime" || Type == "Leader" || Type == "Increase")
+   {
+    Power = 0;
+   }
    listImage = FindObjectOfType<ListImage>();
    S = gameObject.GetComponent<SpriteRenderer>();
    S.sprite =  listImage.sprites[Random.Range(0,listImage.sprites.Count)];
@@ -45,9 +49,12 @@ public class CardObject : MonoBehaviour
 
     void OnMouseEnter()
   {
-    Debug.Log("Hola");
+    Debug.Log("Name : " + Name);
+    Debug.Log("Power : " + Power);
+    Debug.Log("Faction : " + Faction);
+    Debug.Log("Type : " + Type);
     spriteGigante.transform.localScale = new Vector3(0.3f,0.3f,0);
-    S.sprite = GetComponent<SpriteRenderer>().sprite;
+    spriteGigante.GetComponent<SpriteRenderer>().sprite = S.sprite;
   }
   void OnMouseExit()
   {
@@ -57,7 +64,7 @@ public class CardObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-      Debug.Log(spriteGigante);
+      
       spriteGigante = GameObject.FindGameObjectWithTag("Show Card");
     }
 }
