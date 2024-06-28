@@ -28,13 +28,17 @@ public class CardObject : MonoBehaviour
    Faction = faction;
    Type = type;
    Range = range;
+   listImage = FindObjectOfType<ListImage>();
+   S = gameObject.GetComponent<SpriteRenderer>();
    if(Type == "Clime" || Type == "Leader" || Type == "Increase")
    {
     Power = 0;
+    S.sprite =  listImage.spritesMagic[Random.Range(0,listImage.spritesMagic.Count)];
    }
-   listImage = FindObjectOfType<ListImage>();
-   S = gameObject.GetComponent<SpriteRenderer>();
-   S.sprite =  listImage.sprites[Random.Range(0,listImage.sprites.Count)];
+   else
+   {
+     S.sprite =  listImage.sprites[Random.Range(0,listImage.sprites.Count)];
+   }
    PrefabUtility.SaveAsPrefabAsset(gameObject,"Assets/Resources/Card"+ Controller.NumCard + ".prefab");
    GameObject ImageWindscript = GameObject.Find("Image");
     if (ImageWindscript != null)
@@ -87,7 +91,7 @@ public class CardObject : MonoBehaviour
           {
             if(CardUnidad.posicionescartasmagicas[i,0] == false)
             {
-              InvokkeAux(MatrixCardMagic(i,0));
+              InvokkeAux(PositionInvoke.MatrixCardMagic(i,0));
               CardUnidad.posicionescartasmagicas[i,0] = true;
               return;
             }
@@ -100,7 +104,7 @@ public class CardObject : MonoBehaviour
           {
             if(CardUnidad.posicionescartasmagicasrival[i,0] == false)
             {
-              InvokkeAux(MatrixCardMagicRival(i,0));
+              InvokkeAux(PositionInvoke.MatrixCardMagicRival(i,0));
               CardUnidad.posicionescartasmagicasrival[i,0] = true;
               return;
             }
@@ -132,7 +136,7 @@ public class CardObject : MonoBehaviour
           {
             if(CardUnidad.posicionescartasmagicas[i,1] == false)
             {
-              InvokkeAux(MatrixCardMagic(i,1));
+              InvokkeAux(PositionInvoke.MatrixCardMagic(i,1));
               CardUnidad.posicionescartasmagicas[i,1] = true;
               return;
             }
@@ -145,7 +149,7 @@ public class CardObject : MonoBehaviour
           {
             if(CardUnidad.posicionescartasmagicasrival[i,1] == false)
             {
-              InvokkeAux(MatrixCardMagicRival(i,1));
+              InvokkeAux(PositionInvoke.MatrixCardMagicRival(i,1));
               CardUnidad.posicionescartasmagicasrival[i,1] = true;
               return;
             }
@@ -163,7 +167,7 @@ public class CardObject : MonoBehaviour
              {
               if(CardUnidad.posicionescampo[0,i] == false)
               {
-                InvokkeAux(MatrixCardField(0,i));
+                InvokkeAux(PositionInvoke.MatrixCardField(0,i));
                 CardUnidad.posicionescampo[0,i] = true;
                 return;
               }
@@ -175,7 +179,7 @@ public class CardObject : MonoBehaviour
              {
               if(CardUnidad.posicionescamporival[0,i] == false)
               {
-                InvokkeAux(MatrixCardFieldRival(0,i));
+                InvokkeAux(PositionInvoke.MatrixCardFieldRival(0,i));
                 CardUnidad.posicionescamporival[0,i] = true;
                 return;
               }
@@ -190,7 +194,7 @@ public class CardObject : MonoBehaviour
              {
               if(CardUnidad.posicionescampo[2,i] == false)
               {
-                InvokkeAux(MatrixCardField(2,i));
+                InvokkeAux(PositionInvoke.MatrixCardField(2,i));
                 CardUnidad.posicionescampo[2,i] = true;
                 return;
               }
@@ -202,7 +206,7 @@ public class CardObject : MonoBehaviour
              {
               if(CardUnidad.posicionescamporival[2,i] == false)
               {
-                InvokkeAux(MatrixCardFieldRival(2,i));
+                InvokkeAux(PositionInvoke.MatrixCardFieldRival(2,i));
                 CardUnidad.posicionescamporival[2,i] = true;
                 return;
               }
@@ -217,7 +221,7 @@ public class CardObject : MonoBehaviour
              {
               if(CardUnidad.posicionescampo[1,i] == false)
               {
-                InvokkeAux(MatrixCardField(1,i));
+                InvokkeAux(PositionInvoke.MatrixCardField(1,i));
                 CardUnidad.posicionescampo[1,i] = true;
                 return;
               }
@@ -229,7 +233,7 @@ public class CardObject : MonoBehaviour
              {
               if(CardUnidad.posicionescamporival[1,i] == false)
               {
-                InvokkeAux(MatrixCardFieldRival(1,i));
+                InvokkeAux(PositionInvoke.MatrixCardFieldRival(1,i));
                 CardUnidad.posicionescamporival[1,i] = true;
                 return;
               }
@@ -255,165 +259,6 @@ public void InvokkeAux(string PosCardField)
   else
   {
     CardUnidad.ContadorRival += Power;
-  }
-}
-
-public string MatrixCardField(int i , int j)
-{
-  //Asedio
- if(i == 2 && j == 0)
- {
-   return "Asedio1Espacio1";
- }
- else if(i == 2 && j == 1 )
- {
-   return "Asedio1Espacio2";
- }
- else if(i == 2 && j == 2)
- {
-   return "Asedio1Espacio3";
- }
- //Distance
- else if(i == 1 && j == 0)
- {
-   return "Distancia1Espacio1";
- }
- else if(i == 1 && j == 1)
- {
-  return "Distancia1Espacio2";
- }
- else if(i == 1 && j == 2)
- {
-  return "Distancia1Espacio3";
- }
- //Distance
- else if(i == 0 && j == 0)
- {
-  return "Cuerpo1Espacio3";
- }
- else if(i == 0 && j == 1)
- {
-    return "Cuerpo1Espacio1";
- }
- else if(i == 0 && j == 2)
- {
-   return "Cuerpo1Espacio2";
- }
- else
- {
-  return "";
- }
-}
-public string MatrixCardFieldRival(int i , int j)
-{
-  //Asedio
-  if(i == 2 && j == 0)
- {
-   return "Asedio2Espacio1";
- }
- else if(i == 2 && j == 1 )
- {
-   return "Asedio2Espacio2";
- }
- else if(i == 2 && j == 2)
- {
-   return "Asedio2Espacio3";
- }
- //Distance
- else if(i == 1 && j == 0)
- {
-   return "Distancia2Espacio1";
- }
- else if(i == 1 && j == 1)
- {
-  return "Distancia2Espacio2";
- }
- else if(i == 1 && j == 2)
- {
-  return "Distancia2Espacio3";
- }
- //Meele
- else if(i == 0 && j == 0)
- {
-  return "Cuerpo2Espacio3";
- }
- else if(i == 0 && j == 1)
- {
-    return "Cuerpo2Espacio1";
- }
- else if(i == 0 && j == 2)
- {
-   return "Cuerpo2Espacio2";
- }
- else
- {
-  return "";
- }
-}
-public string MatrixCardMagic(int i , int j)
-{
-  //Case Clime
-  if(i == 0 && j == 1)
-  {
-    return "Clima1";
-  } 
-  else if(i == 1 && j == 1)
-  {
-    return "Clima2";
-  } 
-  else if(i == 2 && j == 1)
-  {
-    return "Clima3";
-  }
-  //Case Increase
-  else if(i == 0 && j == 0)
-  {
-    return "AumentoDistancia1";
-  }
-  else if(i == 1 && j == 0 )
-  {
-    return "AumentoAsedio1";
-  }
-  else if(i == 2 &&  j == 0)
-  {
-    return "AumentoCuerpo1";
-  }
-  else
-  {
-    return "";
-  }
-}
-public string MatrixCardMagicRival(int i , int j)
-{
-  //Increase
-  if(i == 0 && j == 0)
-  {
-    return "AumentoDistancia2";
-  }
-  else if(i == 1 && j == 0)
-  {
-    return "AumentoCuerpo2";
-  }
-  else if(i == 2 && j == 0)
-  {
-    return "AumentoAsedio2";
-  }
-  //Clime
-  else if(i == 0 && j == 1)
-  {
-    return "Clima4";
-  }
-  else if(i == 1 &&  j == 1)
-  {
-    return "Clima5";
-  }
-  else if(i == 2 && j == 1)
-  {
-   return "Clima6";
-  }
-  else
-  {
-    return "";
   }
 }
 public bool Content(string RangeString)
