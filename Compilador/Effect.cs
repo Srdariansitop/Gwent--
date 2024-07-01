@@ -13,10 +13,10 @@ public class Effect : MonoBehaviour
    {
     Params = paramss;
     Name = name;
-
+    Controller.NumEffect += 1;
    }
   void Awake()
  {
-  PrefabUtility.SaveAsPrefabAsset(gameObject, "Assets/EffectsResources/Effect" + 1 + ".prefab"); 
+  PrefabUtility.SaveAsPrefabAsset(gameObject, "Assets/EffectsResources/Effect" + Controller.NumEffect + ".prefab"); 
  }
 }

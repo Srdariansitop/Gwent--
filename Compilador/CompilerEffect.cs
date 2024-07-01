@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 
 public class CompilerEffect
 {
    public static string NameEffect;
    public static List<Param> Params = new List<Param>();
+   public static List<Token> ActionTokens = new List<Token>();
    
    public static void ExpressionEffect(List<Token> tokens, int pos , int posfinal ,Token ultimate , List<Token> actuallyToken)
    {
@@ -70,11 +72,37 @@ public class CompilerEffect
            ParamsAnalyzer(pos + 1 , posexample,tokens);
            actuallyToken = new List<Token>();
            ultimate = null;
-           ExpressionEffect(tokens,posexample + 1,posfinal,ultimate,actuallyToken);
+           ExpressionEffect(tokens,posexample,posfinal,ultimate,actuallyToken);
          }
          else
          {
+            SemanticAnalyzer.SemancticError = true;
             Controller.ErrorExpected('{');
+         }
+      }
+      else if(ultimate.Type == TypeToken.Action)
+      {
+         if(ParserAction(tokens,pos))
+         {
+            pos = pos + 6;
+            if(SemanticAnalyzer.Expect(tokens[pos].Type,TypeToken.KeyLeft))
+            {
+               int posexample = pos+1;
+               SemanticAnalyzer.ExitContext(ref posexample,tokens,0);
+               ActionList(tokens,pos + 1,posexample - 1);
+               actuallyToken = new List<Token>();
+               ultimate = null;
+               ExpressionEffect(tokens,posexample + 1,posfinal,ultimate,actuallyToken);
+            }
+            else
+            {
+               SemanticAnalyzer.SemancticError = true;
+               Controller.ErrorExpected('{');
+            }
+         }
+         else
+         {
+           SemanticAnalyzer.SemancticError = true;
          }
       }
       else
@@ -126,6 +154,71 @@ public class CompilerEffect
      }
    }
 
+
+  //Action
+  public static bool ParserAction(List<Token> tokens,int pos)
+  {
+    if(tokens[pos].Type == TypeToken.ParenthesisLeft)
+    {
+      if(tokens[pos + 1].Type == TypeToken.targets)
+      {
+         if(tokens[pos + 2].Type == TypeToken.Coma)
+         {
+             if(tokens[pos + 3].Type == TypeToken.context)
+             {
+               if(tokens[pos + 4].Type == TypeToken.ParenthesisRigth)
+               {
+                  if(tokens[pos + 5].Type == TypeToken.Do)
+                  {
+                     return true;
+                  }
+                  else
+                  {
+                  Controller.ExpressionInvalidate(tokens[pos + 5]);
+                  return false;
+                  }
+               }
+               else
+               {
+                  Controller.ErrorExpected(')');
+                  return false;
+               }
+             }
+             else
+             {
+                Controller.ExpressionInvalidate(tokens[pos + 3]);
+               return false;
+             }
+         }
+         else
+         {
+              Controller.ErrorExpected(',');
+              return false;
+         }
+      }
+      else
+      {
+         Controller.ExpressionInvalidate(tokens[pos + 1]);
+         return false;
+      }
+    }
+    else
+    {
+      Controller.ErrorExpected('(');
+      return false;
+    }
+  }
+
+
+   //rellenar la lista de Action
+   public static void ActionList(List<Token> tokens , int pos , int posfinal)
+   {
+      for(int i = pos ; i < posfinal ; i++)
+      {
+         ActionTokens.Add(tokens[i]);
+      }
+
+   }
   public static void ResetEffect()
   {
    NameEffect = null;

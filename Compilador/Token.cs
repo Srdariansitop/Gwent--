@@ -82,5 +82,9 @@ public class Token
       NumberWord,
       BoolWord,
       StringWord,
+
+      targets,
+      target,
+      context,
       
     }

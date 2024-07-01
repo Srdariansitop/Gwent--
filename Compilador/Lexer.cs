@@ -250,9 +250,18 @@ public class Lexer
                         case "False":
                              return (new Token(false,TypeToken.Bool));
 
+                        case "Targets":
+                             return(new Token("Targets",TypeToken.targets));
+                        
+                        case "Target":
+                              return(new Token("Target",TypeToken.target));
+                        
+                        case "Context":
+                             return(new Token("Context",TypeToken.context));
+
                         case "Number":
                               return(new Token("Number",TypeToken.NumberWord));
-
+                  
                         case "String":
                              return (new Token("String",TypeToken.StringWord));
 

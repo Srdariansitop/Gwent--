@@ -10,6 +10,7 @@ public class Controller : MonoBehaviour
     public InputField inputField;
     public CardObject cardObject;
     public static int NumCard;
+    public static int NumEffect;
 
     public void ClickBotton()
     {

@@ -62,7 +62,7 @@ public class SemanticAnalyzer
           ///Metodo para cerrar las llaves en el contexto actual , utilizo su puntero para saber cual es el indice final de la expresion
           ///</summary>
         public static void ExitContext(ref int pos, List<Token> tokens, int contador)
-        {
+        {            
             if (contador == -1)
             {
                 return;
