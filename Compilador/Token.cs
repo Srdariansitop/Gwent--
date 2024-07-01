@@ -79,5 +79,8 @@ public class Token
       Meele,
       Distance,
       
+      NumberWord,
+      BoolWord,
+      StringWord,
       
     }

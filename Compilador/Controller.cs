@@ -10,10 +10,12 @@ public class Controller : MonoBehaviour
     public InputField inputField;
     public CardObject cardObject;
     public static int NumCard;
+
     public void ClickBotton()
     {
        cardObject = FindObjectOfType<CardObject>();
        Reset();
+       CompilerEffect.ResetEffect();
        string text = inputField.text;
        Lexer lexer = new Lexer();
        List<Token> tokens = lexer.Tokenizar(text);
@@ -26,6 +28,11 @@ public class Controller : MonoBehaviour
           Debug.Log(CompilerCard.Faction);
           Debug.Log(CompilerCard.Type);
           Debug.Log(CompilerCard.Power);
+          Debug.Log(CompilerEffect.NameEffect);
+          foreach(var x in CompilerEffect.Params)
+          {
+            Debug.Log(x.Name);
+          }
           if(CompilerCard.Range != null)
           {
             for(int i = 0 ; i < CompilerCard.Range.Length;i++)

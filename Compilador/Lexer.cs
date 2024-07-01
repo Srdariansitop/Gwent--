@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Lexer 
 {
@@ -249,6 +250,15 @@ public class Lexer
                         case "False":
                              return (new Token(false,TypeToken.Bool));
 
+                        case "Number":
+                              return(new Token("Number",TypeToken.NumberWord));
+
+                        case "String":
+                             return (new Token("String",TypeToken.StringWord));
+
+                        case "Bool":
+                             return (new Token("Bool",TypeToken.BoolWord));
+                             
                         case "Gold":
                              return (new Token("Gold",TypeToken.Gold));
 
