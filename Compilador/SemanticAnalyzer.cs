@@ -41,7 +41,6 @@ public class SemanticAnalyzer
                     else
                     {
                         CompilerEffect.ExpressionEffect(tokens,pos + 2 , posfinal - 1 ,null,new List<Token>());
-                        new Effect(CompilerEffect.Params,CompilerEffect.NameEffect);
                     }
                 }
                 else

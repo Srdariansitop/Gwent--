@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements.Experimental;
-
+[System.Serializable]
 public class Param
 {
    public TypeParam Type;

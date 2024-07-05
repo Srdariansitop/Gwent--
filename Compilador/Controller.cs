@@ -9,12 +9,14 @@ public class Controller : MonoBehaviour
 {
     public InputField inputField;
     public CardObject cardObject;
+    public Effect effect;
     public static int NumCard;
     public static int NumEffect;
 
     public void ClickBotton()
     {
        cardObject = FindObjectOfType<CardObject>();
+       effect = FindObjectOfType<Effect>();
        Reset();
        CompilerEffect.ResetEffect();
        string text = inputField.text;
@@ -45,13 +47,22 @@ public class Controller : MonoBehaviour
           {
             cardObject.InstanciateNewCard(CompilerCard.Power,CompilerCard.Name,CompilerCard.Faction,CompilerCard.Type,CompilerCard.Range);
           }
-          
+          if(CompilerEffect.ActionTokens.Count > 0 && CompilerEffect.NameEffect != null )
+          {
+           effect.EffectInstanciate(CompilerEffect.Params,CompilerEffect.NameEffect,CompilerEffect.ActionTokens);
+          }
+          else
+          {
+            Debug.Log("Lack of parameters to declare an effect");
+          }
           }
        
        }
       
     } 
-
+    ///<summary>
+    ///Este metodo es para saber si la Carta introducida por el usuario esta completa
+    ///</summary>
      public static bool CompleteCard()
         {
             if(CompilerCard.Name != null && CompilerCard.Range != null && CompilerCard.Faction != null && CompilerCard.Type != null)
