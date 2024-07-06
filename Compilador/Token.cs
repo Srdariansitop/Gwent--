@@ -60,6 +60,11 @@ public class Token
 
       //Selector
       Selector,
+      Single,
+      Source,
+       //Tipos Source
+      SourceTemp,
+
       //PostAction
       PostAction,
 

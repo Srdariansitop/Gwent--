@@ -117,54 +117,80 @@ public class Expression : MonoBehaviour
                     }
                     else
                     {
-                      //No esta en la lista
+                    SemanticAnalyzer.SemancticError = true;
+                    Debug.Log("You have to define the" +(string)actually[posinicial+ 2].Value + "effect beforehand");
                     }
                }
                else
                {
-                //ERROR
+                  SemanticAnalyzer.SemancticError = true;
+                  Controller.ExpressionInvalidate(actually[posinicial + 2]);
                }
           }
           else if(actually[posinicial + 1].Type == TypeToken.KeyLeft)
           {
              int posfinal = posinicial + 2;
              SemanticAnalyzer.ExitContext(ref posfinal , actually,0);
-             for(int i  = posinicial + 2 ;  i < posfinal -1; i++)
+             if(actually[posinicial + 2].Type == TypeToken.Name)
              {
-                if(actually[i].Type == TypeToken.Var)
-                {
-                  if(i + 1 < posfinal - 1 && actually[i + 1].Type == TypeToken.Equal)
+               if(actually[posinicial + 3].Type == TypeToken.Equal)
+               {
+                  if(actually[posinicial + 4].Type == TypeToken.String)
                   {
-
+                       if(FolderEffects((string)actually[posinicial + 4].Value))
+                       {
+                          Effect vareffect = EffectResult((string)actually[posinicial + 4].Value);
+                          ParamsOnEffect(vareffect,actually,posinicial + 5 , posfinal - 2);
+                          CompilerCard.OnActivactionEffects.effects.Add(vareffect);
+                          ParsingOnActivaction(actually,posfinal);
+                       }
+                       else
+                       {
+                        SemanticAnalyzer.SemancticError = true;
+                        Debug.Log("You have to define the" +(string)actually[posinicial+ 4].Value + "effect beforehand");
+                       }
                   }
                   else
                   {
-
+                   SemanticAnalyzer.SemancticError = true;
+                   Controller.ExpressionInvalidate(actually[posinicial + 4]);
                   }
-                }
-                else if(actually[i].Type == TypeToken.Name)
-                {
-                    if(i + 1 < posfinal - 1 && actually[i + 1].Type == TypeToken.Equal)
-                  {
-
-                  }
-                  else
-                  {
-
-                  }
-                }
-                else
-                {
-                  //Error
-                }
-                i +=2;
+               }
+               else
+               {
+                  SemanticAnalyzer.SemancticError = true;
+                  Controller.ErrorExpected('=');
+               }
+             }
+             else
+             {
+               SemanticAnalyzer.SemancticError = true;
+               Controller.ExpressionInvalidate(actually[posinicial + 2]);
              }
           }
           else
           {
-            //Error
+            SemanticAnalyzer.SemancticError = true;
+            Controller.ExpressionInvalidate(actually[posinicial + 1]);
           }
        }
+      else if(actually[posinicial].Type == TypeToken.Selector)
+      {
+        if(SemanticAnalyzer.Expect(actually[posinicial + 1].Type, TypeToken.KeyLeft))
+        {
+          int posfinal = posinicial + 2;
+          SemanticAnalyzer.ExitContext(ref posfinal , actually,0);
+          for(int i = posinicial; i < posfinal - 1 ;i++)
+          {
+            Debug.Log(actually[i].Value);
+          }
+          ParsingOnActivaction(actually,posfinal);
+        }
+        else
+        {
+
+        }
+      }
     }
 
    ///<summary>
@@ -191,4 +217,76 @@ public class Expression : MonoBehaviour
      return false;
   }
 
+   ///<summary>
+   ///Este metodo es para darle valor a los parametros del efecto y controlar cualquier tipo de Error de tipo q pueda existir
+   ///</summary>
+  public static void ParamsOnEffect(Effect effect,List<Token> tokens , int posinit , int posfinal)
+  {
+    bool search = false;
+    if(posinit >= posfinal)
+    {
+      return;
+    }
+    else if(tokens[posinit].Type == TypeToken.Var)
+    {
+      for(int i = 0 ; i < effect.Params.Count;i++)
+      {
+        if(effect.Params[i].Name == (string)tokens[posinit].Value)
+        {
+          if(tokens[posinit + 1].Type == TypeToken.Equal)
+          {
+             if(tokens[posinit+2].Type == TypeToken.Number && effect.Params[i].Type == TypeParam.Number || tokens[posinit+2].Type == TypeToken.Bool && effect.Params[i].Type == TypeParam.Bool || tokens[posinit+2].Type == TypeToken.String && effect.Params[i].Type == TypeParam.String)
+             {
+               effect.Params[i].ValueString = (string)tokens[posinit + 2].Value;
+               //Debug.Log(effect.Params[i].ValueString);
+               ParamsOnEffect(effect,tokens,posinit+3,posfinal);
+               search = true;
+             }
+             else
+             {
+              SemanticAnalyzer.SemancticError = true;
+              Debug.Log("The " + effect.Params[i].Name + " parameter does not match the expected type");
+             }
+          }
+          else
+          {
+            SemanticAnalyzer.SemancticError = true;
+            Controller.ErrorExpected('=');
+          }
+          break;
+        }
+      }
+      //Encontrado o no?
+      if(search == false)
+      {
+      SemanticAnalyzer.SemancticError = true;
+      Debug.Log("No Parameter was found with the name  " + (string)tokens[posinit].Value);
+      }
+    }
+    else
+    {
+      SemanticAnalyzer.SemancticError = true;
+      Controller.ExpressionInvalidate(tokens[posinit]);
+    }
+  }
+
+   ///<summary>
+   ///Obtengo el efecto actual sobre el q estoy trabajando
+   ///</summary>
+  public static Effect EffectResult(string effect)
+  {
+        Effect result = new Effect();
+        string folderPath = "Assets/EffectsResources";
+        string[] filePaths = AssetDatabase.FindAssets("", new[] { folderPath });
+        foreach (string filePath in filePaths)
+        {
+            string assetPath = AssetDatabase.GUIDToAssetPath(filePath);
+            if (assetPath.EndsWith(".prefab"))
+            {
+                GameObject prefab = PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(assetPath)) as GameObject;
+                result = prefab.GetComponent<Effect>();          
+            }
+        }
+        return result;
+  }
 }

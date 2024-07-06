@@ -27,6 +27,8 @@ public class Controller : MonoBehaviour
           SemanticAnalyzer.ControllerAnalizerSemantic(tokens,0);
           if(SemanticAnalyzer.SemancticError == false)
           {
+          if(CompleteCard())
+          {
           Debug.Log(CompilerCard.Name);
           Debug.Log(CompilerCard.Faction);
           Debug.Log(CompilerCard.Type);
@@ -43,8 +45,6 @@ public class Controller : MonoBehaviour
               Debug.Log(CompilerCard.Range[i]);
             }
           }
-          if(CompleteCard())
-          {
             cardObject.InstanciateNewCard(CompilerCard.Power,CompilerCard.Name,CompilerCard.Faction,CompilerCard.Type,CompilerCard.Range);
           }
           if(CompilerEffect.ActionTokens.Count > 0 && CompilerEffect.NameEffect != null )

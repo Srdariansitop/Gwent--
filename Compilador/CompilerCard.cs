@@ -13,6 +13,7 @@ public class CompilerCard : MonoBehaviour
    public static int Power;
    public static bool PowerBool;
    public static bool OnActivation;
+   public static OnActivaction OnActivactionEffects = new OnActivaction();
 
       public static void ExpresionCard(List<Token> tokens, int pos , Token ultimate , int posfinal,List<Token> actuallyToken)
         {

@@ -31,11 +31,10 @@ public class Lexer
                     }
                     continue;
                   }
-                if(char.IsLetter(text[i]))
+                if(char.IsLetter(text[i]) || text[i] == '.')
                   {
                      if(IsNumber(word))
                      {
-                        
                       Controller.ErrorToken(word + text[i]);
                       ErrorLexer = true;
                        break;
@@ -315,6 +314,36 @@ public class Lexer
                         
                         case "Siege":
                              return (new Token("Siege",TypeToken.Siege));
+
+                        case "Selector":
+                              return (new Token("Selector",TypeToken.Selector));
+
+                        case "Source":
+                              return(new Token("Source",TypeToken.Source));
+
+                        case "Deck":
+                             return(new Token("Deck", TypeToken.SourceTemp));
+
+                       case "OtherDeck":
+                              return(new Token("OtherDeck",TypeToken.SourceTemp));
+
+                        case "Field":
+                             return(new Token("Field", TypeToken.SourceTemp));
+
+                        case "OtherField":
+                              return(new Token("OtherField",TypeToken.SourceTemp));
+
+                        case "Hand":
+                             return(new Token("Hand", TypeToken.SourceTemp));
+
+                        case "OtherHand":
+                              return(new Token("OtherHand",TypeToken.SourceTemp));    
+
+                        case "Parent":
+                              return(new Token("Parent",TypeToken.SourceTemp));
+
+                        case "Single":
+                             return(new Token("Single",TypeToken.Single)); 
 
                         default:
                             return(new Token(word,TypeToken.Var));

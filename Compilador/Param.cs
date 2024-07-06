@@ -7,6 +7,7 @@ public class Param
 {
    public TypeParam Type;
    public string Name;
+   public string ValueString;
    public Param(TypeParam type , string name)
    {
      Type = type;
