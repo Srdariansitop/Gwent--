@@ -56,12 +56,24 @@ public class Token
       Or,
       And,
       Coma,
+      //Mayor
+      GreaterThan,
+      //Mayor igual
+      GreaterEqualThan,
+      //Menor Igual
+      LessThan,
+      //Menor
+      SmallerThan,
       //Dentro de las Cartas
 
       //Selector
       Selector,
       Single,
       Source,
+      //Predicate
+      Predicate,
+      unit,
+      unitreferences,
        //Tipos Source
       SourceTemp,
 

@@ -19,6 +19,8 @@ public class CardObject : MonoBehaviour
  public UnityEngine.UI.Image Image;
  private GameObject spriteGigante;
  public SpriteRenderer S;
+
+ public OnActivaction onActivaction;
  
 
   public void InstanciateNewCard(int power,string name , string faction,string type,string[]range)
@@ -38,6 +40,10 @@ public class CardObject : MonoBehaviour
    else
    {
      S.sprite =  listImage.sprites[Random.Range(0,listImage.sprites.Count)];
+   }
+   if(CompilerCard.OnActivation == true)
+   {
+    onActivaction = CompilerCard.OnActivactionEffects;
    }
    PrefabUtility.SaveAsPrefabAsset(gameObject,"Assets/Resources/Card"+ Controller.NumCard + ".prefab");
    GameObject ImageWindscript = GameObject.Find("Image");

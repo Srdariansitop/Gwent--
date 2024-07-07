@@ -180,10 +180,7 @@ public class Expression : MonoBehaviour
         {
           int posfinal = posinicial + 2;
           SemanticAnalyzer.ExitContext(ref posfinal , actually,0);
-          for(int i = posinicial; i < posfinal - 1 ;i++)
-          {
-            Debug.Log(actually[i].Value);
-          }
+          OnActivaction.Selector(actually,posinicial +2 ,posfinal - 1);
           ParsingOnActivaction(actually,posfinal);
         }
         else

@@ -111,6 +111,34 @@ public class Lexer
                      result.Add(new Token("-",TypeToken.Rest));
                      continue;
                   }
+                if(text[i] == '>')
+                {
+                  if(text[i + 1] == '=')
+                  {
+                    result.Add(new Token(">=" , TypeToken.GreaterEqualThan));
+                    i++;
+                    continue;
+                  }
+                  else
+                  {
+                    result.Add(new Token(">", TypeToken.GreaterThan));
+                    continue;
+                  }
+                }
+                if(text[i] == '<')
+                {
+                  if(text[i + 1] == '=')
+                  {
+                    result.Add(new Token("<=" , TypeToken.LessThan));
+                    i++;
+                    continue;
+                  }
+                  else
+                  {
+                    result.Add(new Token("<" , TypeToken.SmallerThan));
+                    continue;
+                  }
+                }
                 if(text[i] == '*')
                   {
                     result.Add(new Token("*",TypeToken.Multiplication));
@@ -344,6 +372,24 @@ public class Lexer
 
                         case "Single":
                              return(new Token("Single",TypeToken.Single)); 
+                        
+                        case "Predicate":
+                              return(new Token("Predicate",TypeToken.Predicate));
+ 
+                        case "unit":
+                              return(new Token("unit",TypeToken.unit));
+
+                        case "unit.power":
+                              return(new Token("Power",TypeToken.unitreferences));      
+
+                        case "unit.faction":
+                              return(new Token("Faction",TypeToken.unitreferences));      
+
+                        case "unit.type":
+                              return(new Token("Type",TypeToken.unitreferences));      
+
+                        case "unit.range":
+                              return(new Token("Range",TypeToken.unitreferences));      
 
                         default:
                             return(new Token(word,TypeToken.Var));
