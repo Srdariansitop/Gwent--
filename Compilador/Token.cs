@@ -13,7 +13,7 @@ public class Token
         }
 
 }
- public enum TypeToken
+ public enum TypeToken 
     {
       
       Effect,

@@ -19,7 +19,6 @@ public class CardObject : MonoBehaviour
  public UnityEngine.UI.Image Image;
  private GameObject spriteGigante;
  public SpriteRenderer S;
-
  public OnActivaction onActivaction;
  
 
@@ -283,11 +282,8 @@ public bool Content(string RangeString)
     Debug.Log(position + " positions are busy in the field");
   }
 
-
-    // Update is called once per frame
     void Update()
     {
-      
       spriteGigante = GameObject.FindGameObjectWithTag("Show Card");
     }
 }

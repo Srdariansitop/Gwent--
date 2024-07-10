@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class OnActivaction
 {
-  public List<Effect> effects = new List<Effect>();
+  public List<GameObject> effects = new List<GameObject>();
   //Selector
   public string Source;
   public bool Single;

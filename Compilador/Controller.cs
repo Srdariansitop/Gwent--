@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.U2D.IK;
 using UnityEngine.UI;
-
+using UnityEditor;
 public class Controller : MonoBehaviour
 {
     public InputField inputField;
@@ -50,6 +51,12 @@ public class Controller : MonoBehaviour
           if(CompilerEffect.ActionTokens.Count > 0 && CompilerEffect.NameEffect != null )
           {
            effect.EffectInstanciate(CompilerEffect.Params,CompilerEffect.NameEffect,CompilerEffect.ActionTokens);
+          //  GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/EffectsResources/Effect" + Controller.NumEffect + ".prefab");
+          //  Debug.Log(prefab);
+          //  Debug.Log(PrefabUtility.IsPartOfPrefabInstance(prefab));
+          //  Effect effecth = prefab.GetComponent<Effect>();
+          //  effecth.ActionToken.Add(new Token("a",TypeToken.StringWord));
+          //  PrefabUtility.ApplyPrefabInstance(prefab, InteractionMode.AutomatedAction);
           }
           else
           {

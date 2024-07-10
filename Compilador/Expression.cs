@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -141,13 +143,13 @@ public class Expression : MonoBehaviour
                        {
                           Effect vareffect = EffectResult((string)actually[posinicial + 4].Value);
                           ParamsOnEffect(vareffect,actually,posinicial + 5 , posfinal - 2);
-                          CompilerCard.OnActivactionEffects.effects.Add(vareffect);
+                          CompilerCard.OnActivactionEffects.effects.Add(vareffect.gameObject);
                           ParsingOnActivaction(actually,posfinal);
                        }
                        else
                        {
                         SemanticAnalyzer.SemancticError = true;
-                        Debug.Log("You have to define the" +(string)actually[posinicial+ 4].Value + "effect beforehand");
+                        Debug.Log("You have to define the " +(string)actually[posinicial+ 4].Value + " effect beforehand");
                        }
                   }
                   else
@@ -206,6 +208,7 @@ public class Expression : MonoBehaviour
                 Effect efffectObject = prefab.GetComponent<Effect>();
                 if(efffectObject.Name == effect)
                 {
+                  DuplicateEffects(prefab);
                  return true;
                 }
               
@@ -235,7 +238,6 @@ public class Expression : MonoBehaviour
              if(tokens[posinit+2].Type == TypeToken.Number && effect.Params[i].Type == TypeParam.Number || tokens[posinit+2].Type == TypeToken.Bool && effect.Params[i].Type == TypeParam.Bool || tokens[posinit+2].Type == TypeToken.String && effect.Params[i].Type == TypeParam.String)
              {
                effect.Params[i].ValueString = (string)tokens[posinit + 2].Value;
-               //Debug.Log(effect.Params[i].ValueString);
                ParamsOnEffect(effect,tokens,posinit+3,posfinal);
                search = true;
              }
@@ -272,18 +274,35 @@ public class Expression : MonoBehaviour
    ///</summary>
   public static Effect EffectResult(string effect)
   {
-        Effect result = new Effect();
-        string folderPath = "Assets/EffectsResources";
+       Effect effect1 = new Effect();
+         string folderPath = "Assets/EffectsPrefab(Clone)";
         string[] filePaths = AssetDatabase.FindAssets("", new[] { folderPath });
         foreach (string filePath in filePaths)
         {
             string assetPath = AssetDatabase.GUIDToAssetPath(filePath);
             if (assetPath.EndsWith(".prefab"))
             {
-                GameObject prefab = PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(assetPath)) as GameObject;
-                result = prefab.GetComponent<Effect>();          
+                GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+
+                Effect efffectObject = prefab.GetComponent<Effect>();
+                if(efffectObject.Name == effect)
+                {
+                
+                 return efffectObject;
+                }
+              
             }
         }
-        return result;
+       return effect1;
   }
+
+   ///<summary>
+   ///Creo un duplicado a mi effecto para no modificar los params de mi efecto general
+   ///</summary>
+  public static void DuplicateEffects(GameObject prefab)
+  {
+   Controller.NumEffect += 1;
+   PrefabUtility.SaveAsPrefabAsset(prefab, "Assets/EffectsPrefab(Clone)/Effect" + Controller.NumEffect + ".prefab");
+  }
+  
 }

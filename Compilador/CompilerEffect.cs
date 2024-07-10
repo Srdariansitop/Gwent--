@@ -1,15 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using UnityEditor;
+using Unity.VisualScripting;
+using System.Linq;
 
-public class CompilerEffect
+public class CompilerEffect: MonoBehaviour
 {
    public static string NameEffect;
    public static List<Param> Params = new List<Param>();
    public static List<Token> ActionTokens = new List<Token>();
    
+
    public static void ExpressionEffect(List<Token> tokens, int pos , int posfinal ,Token ultimate , List<Token> actuallyToken)
    {
       if(pos >= posfinal && actuallyToken.Count == 0)
