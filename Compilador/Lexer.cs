@@ -52,6 +52,7 @@ public class Lexer
                     if(IsNumber(word))
                     {
                       result.Add(new Token(word,TypeToken.Number));
+                      word = "";
                     }
                     else
                     {
@@ -182,6 +183,11 @@ public class Lexer
                 if(text[i] == ',')
                 {
                   result.Add(new Token(",",TypeToken.Coma));
+                  continue;
+                }
+                if(text[i] == ';')
+                {
+                  result.Add(new Token(";",TypeToken.PuntComa));
                   continue;
                 }
                   if(text[i] == '@')
@@ -319,9 +325,6 @@ public class Lexer
                         case "Action":
                             return (new Token("Action", TypeToken.Action));
 
-                        case "amount":
-                            return(new Token("amount",TypeToken.amount));
-
                         case "Name":
                             return (new Token("Name", TypeToken.Name));
                             
@@ -390,6 +393,120 @@ public class Lexer
 
                         case "unit.range":
                               return(new Token("Range",TypeToken.unitreferences));      
+                        
+                        case "for":
+                              return(new Token("for",TypeToken.For));      
+
+                        case "while":
+                              return(new Token("while",TypeToken.While));      
+
+                        case "in":
+                              return(new Token("in",TypeToken.In));      
+                        
+                        case "context.Hand":
+                              return(new Token("context.Hand",TypeToken.ContextProp));
+
+                        case "context.Deck":
+                              return(new Token("context.Deck",TypeToken.ContextProp));
+
+                        case "context.Graveyard":
+                               return(new Token("context.Graveyard",TypeToken.ContextProp));
+
+                        case "context.Board":
+                               return(new Token("context.Board",TypeToken.ContextPropBoard));
+
+                        case "context.TriggerPlayer":
+                               return(new Token("context.TriggerPlayer",TypeToken.ContextTrigger));
+
+                        case "context.HandOfPlayer":
+                              return(new Token("context.HandOfPlayer",TypeToken.ContextPseudoMethod));
+
+                        case "context.FieldOfPlayer":
+                              return(new Token("context.FieldOfPlayer",TypeToken.ContextPseudoMethod));
+
+                        case "context.DeckOfPlayer":
+                               return(new Token("context.DeckOfPlayer",TypeToken.ContextPseudoMethod));
+                            
+                        case "context.GraveyardOfPlayer":
+                               return(new Token("context.GraveyardOfPlayer",TypeToken.ContextPseudoMethod));    
+                        
+                        case "context.Hand.Add":
+                              return(new Token("context.Hand.Add", TypeToken.ContextMethod)); 
+
+                        case "context.Hand.Find":
+                              return(new Token("context.Hand.Find", TypeToken.ContextMethod));  
+
+                        case "context.Hand.Push":
+                              return(new Token("context.Hand.Push", TypeToken.ContextMethod)); 
+
+                        case "context.Hand.SendBootom":
+                              return(new Token("context.Hand.SendBootom", TypeToken.ContextMethod)); 
+
+                        case "context.Hand.Pop":
+                              return(new Token("context.Hand.Pop", TypeToken.ContextMethod)); 
+
+                        case "context.Hand.Remove":
+                              return(new Token("context.Hand.Add", TypeToken.ContextMethod)); 
+                        
+                        case "context.Hand.Shuffle":
+                              return(new Token("context.Hand.Shuffle", TypeToken.ContextMethod));                         
+
+                        case "context.Deck.Add":
+                              return(new Token("context.Deck.Add", TypeToken.ContextMethod)); 
+
+                        case "context.Deck.Find":
+                              return(new Token("context.Deck.Find", TypeToken.ContextMethod));  
+
+                        case "context.Deck.Push":
+                              return(new Token("context.Deck.Push", TypeToken.ContextMethod)); 
+
+                        case "context.Deck.SendBootom":
+                              return(new Token("context.Deck.SendBootom", TypeToken.ContextMethod)); 
+
+                        case "context.Deck.Pop":
+                              return(new Token("context.Deck.Pop", TypeToken.ContextMethod)); 
+
+                        case "context.Deck.Remove":
+                              return(new Token("context.Deck.Add", TypeToken.ContextMethod)); 
+                        
+                        case "context.Deck.Shuffle":
+                              return(new Token("context.Deck.Shuffle", TypeToken.ContextMethod));                         
+
+                        case "context.Graveyard.Add":
+                              return(new Token("context.Graveyard.Add", TypeToken.ContextMethod)); 
+
+                        case "context.Graveyard.Find":
+                              return(new Token("context.Graveyard.Find", TypeToken.ContextMethod));  
+
+                        case "context.Graveyard.Push":
+                              return(new Token("context.Graveyard.Push", TypeToken.ContextMethod)); 
+
+                        case "context.Graveyard.SendBootom":
+                              return(new Token("context.Graveyard.SendBootom", TypeToken.ContextMethod)); 
+
+                        case "context.Graveyard.Pop":
+                              return(new Token("context.Graveyard.Pop", TypeToken.ContextMethod)); 
+
+                        case "context.Graveyard.Remove":
+                              return(new Token("context.Graveyard.Add", TypeToken.ContextMethod)); 
+                        
+                        case "context.Graveyard.Shuffle":
+                              return(new Token("context.Graveyard.Shuffle", TypeToken.ContextMethod));   
+
+                        case "target.Power":
+                              return(new Token("target.Power",TypeToken.TargetProps));
+
+                        case "target.Owner":
+                              return(new Token("target.Owner",TypeToken.TargetProps));
+
+                        case "target.Faction":
+                              return(new Token("target.Faction",TypeToken.TargetProps));
+
+                        case "target.Type":
+                              return(new Token("target.Type",TypeToken.TargetProps));
+
+                        case "target.Name":
+                              return(new Token("target.Name",TypeToken.TargetProps));
 
                         default:
                             return(new Token(word,TypeToken.Var));

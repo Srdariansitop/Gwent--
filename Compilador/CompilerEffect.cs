@@ -6,6 +6,10 @@ using UnityEngine.SceneManagement;
 using UnityEditor;
 using Unity.VisualScripting;
 using System.Linq;
+using TMPro;
+using Unity.VisualScripting.Antlr3.Runtime;
+using System;
+using System.IO;
 
 public class CompilerEffect: MonoBehaviour
 {
@@ -13,7 +17,9 @@ public class CompilerEffect: MonoBehaviour
    public static List<Param> Params = new List<Param>();
    public static List<Token> ActionTokens = new List<Token>();
    
-
+   ///<summary>
+   ///Este metodo es el encargado de Parsear el efecto declarado en la carta actual
+   ///</summary>
    public static void ExpressionEffect(List<Token> tokens, int pos , int posfinal ,Token ultimate , List<Token> actuallyToken)
    {
       if(pos >= posfinal && actuallyToken.Count == 0)
@@ -94,6 +100,7 @@ public class CompilerEffect: MonoBehaviour
                int posexample = pos+1;
                SemanticAnalyzer.ExitContext(ref posexample,tokens,0);
                ActionList(tokens,pos + 1,posexample - 1);
+               ActionParsing.ParsingActionEffects(ActionTokens,0,ActionTokens.Count);
                actuallyToken = new List<Token>();
                ultimate = null;
                ExpressionEffect(tokens,posexample + 1,posfinal,ultimate,actuallyToken);
@@ -117,7 +124,9 @@ public class CompilerEffect: MonoBehaviour
 
    }
   
-   //Metodo Params
+   ///<summary>
+   ///Este metodo es el encargado analizar y evaluar los params del efecto y guardarlo en la carta actual
+   ///</summary>
    public static void ParamsAnalyzer(int pos , int posfinal , List<Token> tokens)
    {
      if(pos >= posfinal)
@@ -159,7 +168,9 @@ public class CompilerEffect: MonoBehaviour
    }
 
 
-  //Action
+   ///<summary>
+   ///Este metodo es el encargado de analizar Semanticamente el Action del effect 
+   ///</summary>
   public static bool ParserAction(List<Token> tokens,int pos)
   {
     if(tokens[pos].Type == TypeToken.ParenthesisLeft)
@@ -214,7 +225,9 @@ public class CompilerEffect: MonoBehaviour
   }
 
 
-   //rellenar la lista de Action
+   ///<summary>
+   ///Este metodo es el encargado de rellenar el Action List
+   ///</summary>
    public static void ActionList(List<Token> tokens , int pos , int posfinal)
    {
       for(int i = pos ; i < posfinal ; i++)
@@ -226,10 +239,10 @@ public class CompilerEffect: MonoBehaviour
   public static void ResetEffect()
   {
    NameEffect = null;
+   Params = new List<Param>();
+   ActionTokens= new List<Token>(); 
   }
  
-  
 
-
-
+ 
 }

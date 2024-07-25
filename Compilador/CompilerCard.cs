@@ -15,6 +15,9 @@ public class CompilerCard : MonoBehaviour
    public static bool OnActivation;
    public static OnActivaction OnActivactionEffects = new OnActivaction();
 
+           ///<summary>
+          ///Maquina de Estados Recursiva utilizada para Parsear y dar valor a las propiedades de la Carta
+          ///</summary>
       public static void ExpresionCard(List<Token> tokens, int pos , Token ultimate , int posfinal,List<Token> actuallyToken)
         {
             if(pos == posfinal)

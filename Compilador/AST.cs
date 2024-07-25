@@ -171,6 +171,9 @@ public class AST
             return result;
         }
 
+     ///<summary>
+     ///Este metodo traduce el token actual en un node segun su operacion matematica
+    ///</summary>
      public static Node SumorRestorMultiplicationorDivision(List<Token> tokens , int pos)
         {
             if (tokens[pos].Type == TypeToken.Sum)

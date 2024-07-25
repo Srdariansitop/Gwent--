@@ -56,6 +56,7 @@ public class Token
       Or,
       And,
       Coma,
+      PuntComa,
       //Mayor
       GreaterThan,
       //Mayor igual
@@ -86,7 +87,7 @@ public class Token
       Clime,
       Leader,
       Increase,
-
+      
       //Faction
       Red,
       Legend,
@@ -103,5 +104,13 @@ public class Token
       targets,
       target,
       context,
-      
+      For,
+      While,
+      In,
+      ContextProp,
+      ContextPseudoMethod,
+      ContextMethod,
+      ContextPropBoard,
+      ContextTrigger,
+      TargetProps,
     }

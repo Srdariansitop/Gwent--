@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -171,5 +172,56 @@ public class OnActivaction
       Controller.ErrorExpected('(');
     }
    }
+
+  public static List<GameObject> SourceReturn(string Source , string Faction)
+  {
+    Deck deck = GameObject.Find("DeckRed").GetComponent<Deck>();
+    Deck deck1 = GameObject.Find("DeckLegendarios").GetComponent<Deck>();
+    GameObject canvasObject = GameObject.FindGameObjectWithTag("Invocadas");
+    if(Source == "Hand" && Faction == "Red" || Source == "OtherHand" && Faction == "Legend")
+    {
+      return deck.hand;
+    }
+    else if(Source == "Hand" && Faction == "Legend" || Source == "OtherHand" && Faction == "Red")
+    {
+      return deck1.hand;
+    }
+    else if(Source == "Field" && Faction == "Red" || Source == "OtherField" && Faction == "Legend" )
+    {
+      List<GameObject> list = new List<GameObject>();
+      foreach(Transform item in canvasObject.transform)
+      {
+        CardUnidad actually = item.gameObject.GetComponent<CardUnidad>();
+        if(actually != null && actually.Faction == "Red")
+        {
+          list.Add(actually.gameObject);
+        }
+      }
+      return list;
+    }
+    else if(Source == "Field" && Faction == "Legend" || Source == "OtherField" && Faction == "Red")
+    {
+      List<GameObject> list = new List<GameObject>();
+      foreach(Transform item in canvasObject.transform)
+      {
+        CardUnidad actually = item.gameObject.GetComponent<CardUnidad>();
+        if(actually != null && actually.Faction == "Legend")
+        {
+          list.Add(actually.gameObject);
+        }
+      }
+      return list;
+    }
+    else if(Source == "Deck" && Faction == "Red" || Source == "Deck" && Faction == "Legend")
+    {
+     return deck.deck;
+    }
+    else 
+    {
+     return deck1.deck;
+    }
+ 
+  }
+
 
 }

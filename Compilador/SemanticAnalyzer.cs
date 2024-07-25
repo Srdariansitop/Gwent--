@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 public class SemanticAnalyzer 
 {
    public static bool SemancticError;
+   public static bool EffectIns;
 
           ///<summary>
           ///Este metodo es el que controla el flujo del programa en el analizador
@@ -41,6 +42,7 @@ public class SemanticAnalyzer
                     else
                     {
                         CompilerEffect.ExpressionEffect(tokens,pos + 2 , posfinal - 1 ,null,new List<Token>());
+                        EffectIns = true;
                     }
                 }
                 else
@@ -176,5 +178,40 @@ public class SemanticAnalyzer
               
               return PowerFinal;
         }
-       
+
+        ///<summary>
+        ///Metodo utlizado para saber la posicion final del Parentesis en la expresion Actual
+        ///</summary>
+   public static void ExitParenthesis(ref int pos ,List<Token> tokens , int contador)
+ {
+   if(contador == -1)
+   {
+      return;
+   }
+   else if(pos >= tokens.Count)
+   {
+      SemancticError = true;
+      Controller.ErrorExpected(')');
+      return;
+   }
+   else if(tokens[pos].Type == TypeToken.ParenthesisLeft)
+   {
+     pos+=1;
+     contador+=1;
+     ExitParenthesis(ref pos , tokens,contador);
+   }
+   else if(tokens[pos].Type == TypeToken.ParenthesisRigth)
+   {
+     pos+=1;
+     contador-=1;
+     ExitParenthesis(ref pos , tokens, contador);
+   }
+   else
+   {
+      pos+=1;
+      ExitParenthesis(ref pos ,tokens,contador);
+   }
+ }
+
+
 }

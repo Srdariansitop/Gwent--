@@ -73,6 +73,10 @@ public class CardObject : MonoBehaviour
   void OnMouseDown()
   {
     Invokee();
+    if(onActivaction != null)
+    {
+      EffectApli();
+    }
   }
 
   public void Invokee()
@@ -253,7 +257,6 @@ public class CardObject : MonoBehaviour
 
 public void InvokkeAux(string PosCardField)
 {
-  //Invocadas.Add(positionhand);
   GameObject posx = GameObject.Find(PosCardField);
   Vector3 posy = posx.transform.position;
   gameObject.transform.position = new Vector3(posy.x , posy.y , 2f);
@@ -280,6 +283,17 @@ public bool Content(string RangeString)
   public void ErrorInvocacion(string position)
   {
     Debug.Log(position + " positions are busy in the field");
+  }
+
+
+  public void EffectApli()
+  {
+    List<GameObject> Source = OnActivaction.SourceReturn(onActivaction.Source,Faction);
+    for(int i = 0 ; i < onActivaction.effects.Count ; i++)
+    {  
+      Lexer lexer = new Lexer();
+      List<Token> tokens = lexer.Tokenizar(onActivaction.effects[i].GetComponent<Effect>().Acction);
+    }
   }
 
     void Update()

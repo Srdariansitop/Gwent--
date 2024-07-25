@@ -14,6 +14,9 @@ public class Controller : MonoBehaviour
     public static int NumCard;
     public static int NumEffect;
 
+    ///<summary>
+    ///Este metodo es el encargado de Controllar el flujo del programa entero tanto para la creacion de un efecto como para la de una carta
+    ///</summary>
     public void ClickBotton()
     {
        cardObject = FindObjectOfType<CardObject>();
@@ -26,19 +29,14 @@ public class Controller : MonoBehaviour
        if(Lexer.ErrorLexer == false)
        {
           SemanticAnalyzer.ControllerAnalizerSemantic(tokens,0);
-          if(SemanticAnalyzer.SemancticError == false)
-          {
+        if(SemanticAnalyzer.SemancticError == false)
+        {
           if(CompleteCard())
           {
           Debug.Log(CompilerCard.Name);
           Debug.Log(CompilerCard.Faction);
           Debug.Log(CompilerCard.Type);
           Debug.Log(CompilerCard.Power);
-          Debug.Log(CompilerEffect.NameEffect);
-          foreach(var x in CompilerEffect.Params)
-          {
-            Debug.Log(x.Name);
-          }
           if(CompilerCard.Range != null)
           {
             for(int i = 0 ; i < CompilerCard.Range.Length;i++)
@@ -46,23 +44,23 @@ public class Controller : MonoBehaviour
               Debug.Log(CompilerCard.Range[i]);
             }
           }
-            cardObject.InstanciateNewCard(CompilerCard.Power,CompilerCard.Name,CompilerCard.Faction,CompilerCard.Type,CompilerCard.Range);
+          cardObject.InstanciateNewCard(CompilerCard.Power,CompilerCard.Name,CompilerCard.Faction,CompilerCard.Type,CompilerCard.Range);
           }
           if(CompilerEffect.ActionTokens.Count > 0 && CompilerEffect.NameEffect != null )
           {
-           effect.EffectInstanciate(CompilerEffect.Params,CompilerEffect.NameEffect,CompilerEffect.ActionTokens);
-          //  GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/EffectsResources/Effect" + Controller.NumEffect + ".prefab");
-          //  Debug.Log(prefab);
-          //  Debug.Log(PrefabUtility.IsPartOfPrefabInstance(prefab));
-          //  Effect effecth = prefab.GetComponent<Effect>();
-          //  effecth.ActionToken.Add(new Token("a",TypeToken.StringWord));
-          //  PrefabUtility.ApplyPrefabInstance(prefab, InteractionMode.AutomatedAction);
+          Debug.Log(CompilerEffect.NameEffect);
+          foreach(var x in CompilerEffect.Params)
+          {
+            Debug.Log(x.Name);
           }
-          else
+           effect.EffectInstanciate(CompilerEffect.Params,CompilerEffect.NameEffect,CompilerEffect.ActionTokens);
+          }
+          
+          else if(SemanticAnalyzer.EffectIns == true)
           {
             Debug.Log("Lack of parameters to declare an effect");
           }
-          }
+        }
        
        }
       
@@ -94,6 +92,8 @@ public class Controller : MonoBehaviour
         }
 
    
+   #region Errores
+    
         public static void ErrorToken(string token)
         {
           Debug.Log(" Unidentified " + token + " Token" );
@@ -115,7 +115,13 @@ public class Controller : MonoBehaviour
            }
            Debug.Log("Invalid expression "  + Expresion + " within the context Power" );
         }
+        public static void ErrorOfType(Token token , Token token1)
+        {
+          Debug.Log("You cannot compare the " + token.Value + " variable of Type " + token.Type + " with the variable " + token1.Value + " of type " + token1.Type);
+        }
 
+   #endregion
+      
       ///<summary>
       ///Este metodo es el encargado de limpiar todos los valores estaticos generados por el InputField
       ///</summary>
@@ -128,5 +134,11 @@ public class Controller : MonoBehaviour
           CompilerCard.Type = null;
           CompilerCard.Faction = null;
           CompilerCard.PowerBool = new bool();
+          CompilerCard.OnActivation = new bool();
+          CompilerCard.OnActivactionEffects = new OnActivaction();
+          CompilerEffect.ActionTokens = new List<Token>();
+          CompilerEffect.Params = new List<Param>();
+          CompilerEffect.NameEffect = null;
+          SemanticAnalyzer.EffectIns = new bool();
         }
 }
