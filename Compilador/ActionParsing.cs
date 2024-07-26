@@ -23,26 +23,65 @@ public class ActionParsing
       {
          if(ExtractToProp((string)tokens[pos].Value) == "Power" && (tokens[pos + 2].Type == TypeToken.Number ||tokens[pos + 2].Type == TypeToken.Var && CompareType(tokens[pos + 2],tokens,TypeToken.Number,pos) ||tokens[pos + 2].Type == TypeToken.Var &&  CompareTypeOfParams(tokens[pos + 2],TypeToken.Number)) )
          {
-           Debug.Log("Mataste pa");
+            if(tokens[pos + 3].Type == TypeToken.PuntComa)
+            {
+              ParsingActionEffects(tokens,pos + 4,posfinal);
+            }
+            else
+            {
+
+            }
+           
          }
          else if(ExtractToProp((string)tokens[pos].Value) == "Name" && (tokens[pos + 2].Type == TypeToken.String || tokens[pos + 2].Type == TypeToken.Var && CompareType(tokens[pos +2],tokens,TypeToken.String,pos) || tokens[pos + 2].Type == TypeToken.Var && CompareTypeOfParams(tokens[pos + 2] , TypeToken.String)) )
          {
+            if(tokens[pos + 3].Type == TypeToken.PuntComa)
+            {
+              ParsingActionEffects(tokens,pos + 4,posfinal);
+            }
+            else
+            {
 
+            }
          }
          else if(ExtractToProp((string)tokens[pos].Value) == "Faction" )
          { 
+            List<string> Factions = new List<string>{"Red" , "Legend"};
            if(tokens[pos + 2].Type == TypeToken.String && ((string)tokens[pos + 2].Value == "Red" || (string)tokens[pos + 2].Value == "Legend"))
            {
+            if(tokens[pos + 3].Type == TypeToken.PuntComa)
+            {
+              ParsingActionEffects(tokens,pos + 4,posfinal);
+            }
+            else
+            {
 
+            }
            }
-           else if(tokens[pos + 2].Type == TypeToken.Var && CompareTypeOfParams(tokens[pos + 2],TypeToken.String) && (ValueStringParams((string)tokens[pos + 2].Value) == "Red" || ValueStringParams((string)tokens[pos + 2].Value) == "Legend"))
+           else if(tokens[pos + 2].Type == TypeToken.Var && ValueValorsExpect(tokens,(string)tokens[pos +2].Value,pos,Factions))
            {
+            if(tokens[pos + 3].Type == TypeToken.PuntComa)
+            {
+               Debug.Log("Hablate");
+              ParsingActionEffects(tokens,pos + 4,posfinal);
+            }
+            else
+            {
 
+            }
            }
            else
            {
-
+            
            }
+         }
+         else if(ExtractToProp((string)tokens[pos].Value) == "Type")
+         {
+
+         }
+         else
+         {
+
          }
       }
       else
@@ -352,14 +391,17 @@ public class ActionParsing
    ///</summary>
   public static bool CompareType(Token token , List<Token> tokens , TypeToken typeToken , int pos)
   {
-
    for(int i = 0 ; i < pos ; i++)
    {
-      if(tokens[i].Type == TypeToken.Var && (string)tokens[i].Value == (string)token.Value)
+      if(tokens[i].Type == TypeToken.Var && (string)tokens[i].Value == (string)token.Value && tokens[i + 1].Type == TypeToken.Equal)
       {
-         if(tokens[i + 1].Type == TypeToken.Equal && typeToken == tokens[i + 2].Type)
+         if(typeToken == tokens[i + 2].Type)
          {
            return true;
+         }
+         else if(tokens[i + 2].Type == TypeToken.Var)
+         {
+          return CompareType(tokens[i + 2], tokens,typeToken,i);
          }
          else
          {
@@ -500,6 +542,35 @@ public static string ValueStringParams(string name)
       }
    }
    return result;
+}
+
+   ///<summary>
+   ///Este metodo es creado especialmente para analizar los casos en q las variables q estamos buscando esten igualadas a otra variables
+   ///</summary>
+public static bool ValueValorsExpect(List<Token> tokens , string namevar , int pos, List<string> names)
+{
+   for(int i = 0 ; i < pos;i++)
+   {
+      if(tokens[i].Type == TypeToken.Var && (string)tokens[i].Value == namevar && tokens[i + 1].Type == TypeToken.Equal)
+      {
+         
+         if(tokens[i + 2].Type == TypeToken.Var)
+         {
+           return ValueValorsExpect(tokens,(string)tokens[i + 2].Value,i,names);
+         }
+         else
+         {
+            foreach(string name in names)
+            {
+               if(name == (string)tokens[i+2].Value)
+               {
+                  return true;
+               }
+            }
+         }
+      }
+   }
+   return false;
 }
 
 }
