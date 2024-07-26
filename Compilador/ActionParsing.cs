@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 
 public class ActionParsing
@@ -17,11 +18,85 @@ public class ActionParsing
    {
       return;
    }
+   else if(tokens[pos].Type == TypeToken.ContextMethod)
+   {
+      if(tokens[pos + 1].Type == TypeToken.ParenthesisLeft)
+      {
+        string Method = WhichMethodContext((string)tokens[pos].Value);
+        if(Method == "Find")
+        {
+          OnActivaction.Predicate(tokens,pos+2);
+          if(tokens[pos + 9].Type == TypeToken.ParenthesisRigth)
+          {
+            if(tokens[pos + 10].Type == TypeToken.PuntComa)
+            {
+              ParsingActionEffects(tokens,pos+11,posfinal);
+            }
+            else
+            {
+
+            }
+          }
+          else
+          {
+
+          }
+          
+        }
+        else if(Method == "Push" || Method == "SendBootom" || Method == "Remove")
+        {
+           if(tokens[pos + 2].Type == TypeToken.target || tokens[pos + 2].Type == TypeToken.Var && TypeTokenCard(tokens,(string)tokens[pos + 2].Value,pos))
+           {
+             if(tokens[pos + 3].Type == TypeToken.ParenthesisRigth)
+             {
+               if(tokens[pos + 4].Type == TypeToken.PuntComa)
+               {
+                 ParsingActionEffects(tokens,pos+ 5,posfinal);
+               }
+               else
+               {
+
+               }
+             }
+             else
+             {
+
+             }
+           }
+           else
+           {
+
+           }
+        }
+        else
+        {
+          if(tokens[pos + 2].Type == TypeToken.ParenthesisRigth)
+          {
+            if(tokens[pos + 3].Type == TypeToken.PuntComa)
+            {
+              ParsingActionEffects(tokens,pos + 4,posfinal);
+            }
+            else
+            {
+
+            }
+          }
+          else
+          {
+
+          }
+        }
+      }
+      else
+      {
+
+      }
+   }
    else if(tokens[pos].Type == TypeToken.TargetProps)
    {
       if(tokens[pos + 1].Type == TypeToken.Equal)
       {
-         if(ExtractToProp((string)tokens[pos].Value) == "Power" && (tokens[pos + 2].Type == TypeToken.Number ||tokens[pos + 2].Type == TypeToken.Var && CompareType(tokens[pos + 2],tokens,TypeToken.Number,pos) ||tokens[pos + 2].Type == TypeToken.Var &&  CompareTypeOfParams(tokens[pos + 2],TypeToken.Number)) )
+         if(ExtractToProp((string)tokens[pos].Value) == "Power" && (tokens[pos + 2].Type == TypeToken.Number ||tokens[pos + 2].Type == TypeToken.Var && CompareType(tokens[pos + 2],tokens,TypeToken.Number,pos) ||tokens[pos + 2].Type == TypeToken.Var &&  CompareTypeOfParams(tokens[pos + 2],TypeToken.Number)) || ExtractToProp((string)tokens[pos].Value) == "Name" && (tokens[pos + 2].Type == TypeToken.String || tokens[pos + 2].Type == TypeToken.Var && CompareType(tokens[pos +2],tokens,TypeToken.String,pos) || tokens[pos + 2].Type == TypeToken.Var && CompareTypeOfParams(tokens[pos + 2] , TypeToken.String)))
          {
             if(tokens[pos + 3].Type == TypeToken.PuntComa)
             {
@@ -30,39 +105,15 @@ public class ActionParsing
             else
             {
 
-            }
-           
-         }
-         else if(ExtractToProp((string)tokens[pos].Value) == "Name" && (tokens[pos + 2].Type == TypeToken.String || tokens[pos + 2].Type == TypeToken.Var && CompareType(tokens[pos +2],tokens,TypeToken.String,pos) || tokens[pos + 2].Type == TypeToken.Var && CompareTypeOfParams(tokens[pos + 2] , TypeToken.String)) )
-         {
-            if(tokens[pos + 3].Type == TypeToken.PuntComa)
-            {
-              ParsingActionEffects(tokens,pos + 4,posfinal);
-            }
-            else
-            {
-
-            }
+            }  
          }
          else if(ExtractToProp((string)tokens[pos].Value) == "Faction" )
          { 
             List<string> Factions = new List<string>{"Red" , "Legend"};
-           if(tokens[pos + 2].Type == TypeToken.String && ((string)tokens[pos + 2].Value == "Red" || (string)tokens[pos + 2].Value == "Legend"))
+           if(tokens[pos + 2].Type == TypeToken.String && ((string)tokens[pos + 2].Value == "Red" || (string)tokens[pos + 2].Value == "Legend") || tokens[pos + 2].Type == TypeToken.Var && ValueValorsExpect(tokens,(string)tokens[pos +2].Value,pos,Factions) )
            {
             if(tokens[pos + 3].Type == TypeToken.PuntComa)
             {
-              ParsingActionEffects(tokens,pos + 4,posfinal);
-            }
-            else
-            {
-
-            }
-           }
-           else if(tokens[pos + 2].Type == TypeToken.Var && ValueValorsExpect(tokens,(string)tokens[pos +2].Value,pos,Factions))
-           {
-            if(tokens[pos + 3].Type == TypeToken.PuntComa)
-            {
-               Debug.Log("Hablate");
               ParsingActionEffects(tokens,pos + 4,posfinal);
             }
             else
@@ -72,12 +123,26 @@ public class ActionParsing
            }
            else
            {
-            
            }
          }
          else if(ExtractToProp((string)tokens[pos].Value) == "Type")
          {
+           List<string> Types = new List<string>{"Gold" , "Silver" , "Meele" , "Siege" , "Distance" , "Clime" , "Increase"};
+           if(tokens[pos + 2].Type == TypeToken.Var && ValueValorsExpect(tokens,(string)tokens[pos +2].Value,pos,Types)  || tokens[pos + 2].Type == TypeToken.String && ((string)tokens[pos + 2].Value == "Gold" || (string)tokens[pos + 2].Value == "Silver" || (string)tokens[pos + 2].Value == "Clime" || (string)tokens[pos + 2].Value == "Increase" || (string)tokens[pos + 2].Value == "Distance" || (string)tokens[pos + 2].Value == "Siege" || (string)tokens[pos + 2].Value == "Meele") )
+           {
+            if(tokens[pos + 3].Type == TypeToken.PuntComa)
+            {
+              ParsingActionEffects(tokens,pos + 4,posfinal);
+            }
+            else
+            {
 
+            }
+           }
+           else
+           {
+
+           }
          }
          else
          {
@@ -122,7 +187,7 @@ public class ActionParsing
 
           }
         }
-        else if(tokens[pos + 2].Type == TypeToken.ContextProp)
+        else if(tokens[pos + 2].Type == TypeToken.ContextProp || tokens[pos + 2].Type == TypeToken.ContextPseudoMethod)
         {
          if(tokens[pos + 3].Type == TypeToken.ParenthesisLeft)
          {
@@ -149,6 +214,18 @@ public class ActionParsing
            {
 
            }
+         }
+         else
+         {
+
+         }
+        }
+        else if(tokens[pos + 2].Type == TypeToken.ContextMethod)
+        {
+         string Method = WhichMethodContext((string)tokens[pos + 2].Value);
+         if(Method == "Pop" || Method == "Find")
+         {
+           ParsingActionEffects(tokens,pos + 2,posfinal);
          }
          else
          {
@@ -573,4 +650,50 @@ public static bool ValueValorsExpect(List<Token> tokens , string namevar , int p
    return false;
 }
 
+   ///<summary>
+   ///Este metodo es para saber cual metodo esta usando un contexto
+   ///</summary>
+public static string WhichMethodContext(string method)
+{
+   var k = 0;
+   string result ="";
+ for(int i = 0 ; i < method.Length;i++)
+ {
+   if(method[i] == '.' && k == 1)
+   {
+      for(int j = i + 1 ; j < method.Length ;j++)
+      {
+        result+= method[j];
+      }
+   }
+   if(method[i] == '.')
+   {
+    k++;
+    continue;
+   }
+ }
+ return result;
+}
+
+   ///<summary>
+   ///Este metodo es usado para saber si es una carta el valor de la variable
+   ///</summary>
+public static bool TypeTokenCard(List<Token> tokens , string namevar,int pos)
+{
+ for(int i = 0 ; i < pos ; i++)
+ {
+   if(tokens[i].Type == TypeToken.Var && (string)tokens[i].Value == namevar && tokens[i + 1].Type == TypeToken.Equal)
+   {
+      if(tokens[i+ 2].Type == TypeToken.Var)
+      {
+         return TypeTokenCard(tokens,(string)tokens[i + 2].Value,i);
+      }
+      else if(tokens[i + 2].Type == TypeToken.ContextMethod && (WhichMethodContext((string)tokens[i + 2].Value) == "Pop" || WhichMethodContext((string)tokens[i + 2].Value) == "Find" ))
+      {
+        return true;
+      }
+   }
+ }
+ return false;
+} 
 }

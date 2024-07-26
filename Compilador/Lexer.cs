@@ -446,7 +446,7 @@ public class Lexer
                               return(new Token("context.Hand.Pop", TypeToken.ContextMethod)); 
 
                         case "context.Hand.Remove":
-                              return(new Token("context.Hand.Add", TypeToken.ContextMethod)); 
+                              return(new Token("context.Hand.Remove", TypeToken.ContextMethod)); 
                         
                         case "context.Hand.Shuffle":
                               return(new Token("context.Hand.Shuffle", TypeToken.ContextMethod));                         
@@ -467,7 +467,7 @@ public class Lexer
                               return(new Token("context.Deck.Pop", TypeToken.ContextMethod)); 
 
                         case "context.Deck.Remove":
-                              return(new Token("context.Deck.Add", TypeToken.ContextMethod)); 
+                              return(new Token("context.Deck.Remove", TypeToken.ContextMethod)); 
                         
                         case "context.Deck.Shuffle":
                               return(new Token("context.Deck.Shuffle", TypeToken.ContextMethod));                         
@@ -488,7 +488,7 @@ public class Lexer
                               return(new Token("context.Graveyard.Pop", TypeToken.ContextMethod)); 
 
                         case "context.Graveyard.Remove":
-                              return(new Token("context.Graveyard.Add", TypeToken.ContextMethod)); 
+                              return(new Token("context.Graveyard.Remove", TypeToken.ContextMethod)); 
                         
                         case "context.Graveyard.Shuffle":
                               return(new Token("context.Graveyard.Shuffle", TypeToken.ContextMethod));   
