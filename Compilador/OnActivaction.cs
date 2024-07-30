@@ -98,7 +98,9 @@ public class OnActivaction
                      }
                      else
                      {
-
+                       SemanticAnalyzer.SemancticError = true;
+                       Debug.Log("The Power property only accepts comparisons between numbers");
+                       return;
                      }
                   }
                   else if((string)tokens[posinicial+4].Value == "Faction" && tokens[posinicial + 5].Type == TypeToken.EqualEqual)
@@ -110,7 +112,9 @@ public class OnActivaction
                      }
                      else
                      {
-                      //Error
+                      SemanticAnalyzer.SemancticError = true;
+                      Debug.Log("Due to the lore of the game no other types of Factions other than Red and Legend are allowed");
+                      return;
                      }
                   }
                   else if((string)tokens[posinicial+4].Value == "Type" && tokens[posinicial + 5].Type == TypeToken.EqualEqual)
@@ -122,7 +126,9 @@ public class OnActivaction
                      }
                      else
                      {
-
+                      SemanticAnalyzer.SemancticError = true;
+                      Debug.Log("Due to the lore of the game , no other type is allowed .Types other than Gold , Silver , Distance , Meele , Siege , Clime , Increase");
+                      return;
                      }
                   }
                   else if((string)tokens[posinicial+4].Value == "Range" && tokens[posinicial + 5].Type == TypeToken.EqualEqual)
@@ -134,12 +140,16 @@ public class OnActivaction
                      }
                      else
                      {
-                      //error
+                      SemanticAnalyzer.SemancticError = true;
+                      Debug.Log("Due to the lore of the game , no other type is allowed Range other than Distance , Meele , Siege ");
+                      return;
                      }
                   }
                   else
                   {
-                    //Error
+                    SemanticAnalyzer.SemancticError = true;
+                    Debug.Log("The " + (string)tokens[posinicial + 4].Value + " property is not valid for predicate");
+                     return;
                   }
                  }
                  else

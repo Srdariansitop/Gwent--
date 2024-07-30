@@ -10,10 +10,6 @@ public class ActionParsing
    ///</summary>
  public static void ParsingActionEffects(List<Token> tokens , int pos , int posfinal)
  {
-    for(int k = pos ; k < posfinal ; k++)
-    {
-      Debug.Log(tokens[k].Value);
-    }
    if(pos >= posfinal)
    {
       return;
@@ -34,12 +30,16 @@ public class ActionParsing
             }
             else
             {
-
+            SemanticAnalyzer.SemancticError = true;
+            Controller.ErrorExpected(';');
+            return;
             }
           }
           else
           {
-
+            SemanticAnalyzer.SemancticError = true;
+            Controller.ErrorExpected(')');
+            return;
           }
           
         }
@@ -55,17 +55,23 @@ public class ActionParsing
                }
                else
                {
-
+                  SemanticAnalyzer.SemancticError = true;
+                  Controller.ErrorExpected(';');
+                  return;
                }
              }
              else
              {
-
+               SemanticAnalyzer.SemancticError = true;
+               Controller.ErrorExpected(')');
+               return;
              }
            }
            else
            {
-
+            SemanticAnalyzer.SemancticError = true;
+            Debug.Log("The " + Method + " method expected a letter as a parameter" );
+            return;
            }
         }
         else
@@ -78,18 +84,24 @@ public class ActionParsing
             }
             else
             {
-
+              SemanticAnalyzer.SemancticError = true;
+              Controller.ErrorExpected(';');
+              return;
             }
           }
           else
           {
-
+            SemanticAnalyzer.SemancticError = true;
+            Controller.ErrorExpected(')');
+            return;
           }
         }
       }
       else
       {
-
+         SemanticAnalyzer.SemancticError = true;
+         Controller.ErrorExpected('(');
+         return;
       }
    }
    else if(tokens[pos].Type == TypeToken.TargetProps)
@@ -104,7 +116,9 @@ public class ActionParsing
             }
             else
             {
-
+            SemanticAnalyzer.SemancticError = true;
+            Controller.ErrorExpected(';');
+            return;
             }  
          }
          else if(ExtractToProp((string)tokens[pos].Value) == "Faction" )
@@ -118,11 +132,16 @@ public class ActionParsing
             }
             else
             {
-
+             SemanticAnalyzer.SemancticError = true;
+             Controller.ErrorExpected(';');
+             return;
             }
            }
            else
            {
+            SemanticAnalyzer.SemancticError = true;
+            Debug.Log("Due to the lore of the game no other types of Factions other than Red and Legend are allowed");
+            return;
            }
          }
          else if(ExtractToProp((string)tokens[pos].Value) == "Type")
@@ -136,22 +155,30 @@ public class ActionParsing
             }
             else
             {
-
+             SemanticAnalyzer.SemancticError = true;
+             Controller.ErrorExpected(';');
+             return;
             }
            }
            else
            {
-
+            SemanticAnalyzer.SemancticError = true;
+            Debug.Log("Due to the lore of the game , no other type is allowed .Types other than Gold , Silver , Distance , Meele , Siege , Clime , Increase");
+            return;
            }
          }
          else
          {
-
+         SemanticAnalyzer.SemancticError = true;
+         Controller.ExpressionInvalidate(tokens[pos]);
+         return;
          }
       }
       else
       {
-
+       SemanticAnalyzer.SemancticError = true;
+       Controller.ErrorExpected('=');
+       return;
       }
    }
    else if(tokens[pos].Type == TypeToken.Var)
@@ -166,7 +193,9 @@ public class ActionParsing
             }
             else
             {
-
+              SemanticAnalyzer.SemancticError = true;
+              Controller.ErrorExpected(';');
+              return;
             }
         }
         else if(tokens[pos + 2].Type == TypeToken.Var)
@@ -179,12 +208,16 @@ public class ActionParsing
              }
              else
              {
-               
+               SemanticAnalyzer.SemancticError = true;
+               Controller.ErrorExpected(';');
+               return;
              }
           }
           else
           {
-
+            SemanticAnalyzer.SemancticError = true;
+            Debug.Log("The " + (string)tokens[pos + 2].Value + " variable does not exist in the context");
+            return;
           }
         }
         else if(tokens[pos + 2].Type == TypeToken.ContextProp || tokens[pos + 2].Type == TypeToken.ContextPseudoMethod)
@@ -201,23 +234,30 @@ public class ActionParsing
                }
                else
                {
-
-               }
-               
+               SemanticAnalyzer.SemancticError = true;
+               Controller.ErrorExpected(';');
+               return;
+               } 
              }
              else
              {
-               
+               SemanticAnalyzer.SemancticError = true;
+               Controller.ErrorExpected(')');
+               return;
              }
            }
            else
            {
-
+            SemanticAnalyzer.SemancticError = true;
+            Debug.Log("The program expects an ID from a letter");
+            return;
            }
          }
          else
          {
-
+         SemanticAnalyzer.SemancticError = true;
+         Controller.ErrorExpected('(');
+         return;
          }
         }
         else if(tokens[pos + 2].Type == TypeToken.ContextMethod)
@@ -229,12 +269,16 @@ public class ActionParsing
          }
          else
          {
-
+          SemanticAnalyzer.SemancticError = true;
+          Debug.Log("You cannot equate a variable to " + (string)tokens[pos + 2].Value + " method");
+          return;
          }
         }
         else
         {
-
+         SemanticAnalyzer.SemancticError = true;
+         Controller.ExpressionInvalidate(tokens[pos + 2]);
+         return;
         }
       }
       else if(tokens[pos + 1].Type == TypeToken.SumSum || tokens[pos + 1].Type == TypeToken.RestRest )
@@ -247,22 +291,28 @@ public class ActionParsing
             }
             else
             {
-
+              SemanticAnalyzer.SemancticError = true;
+              Controller.ErrorExpected(';');
+              return;
             }
          }
          else
          {
-
+         SemanticAnalyzer.SemancticError = true;
+         Debug.Log("Its is only valid to increase or decrease numbers");
+         return;
          }
       }
       else
       {
-
+         SemanticAnalyzer.SemancticError = true;
+         Controller.ErrorExpected('=');
+         return;
       }
    }
    else if(tokens[pos].Type == TypeToken.For)
    {
-      if(tokens[pos + 1].Type == TypeToken.target )
+    if(tokens[pos + 1].Type == TypeToken.target)
       {
        if(tokens[pos + 2].Type == TypeToken.In)
        {
@@ -280,22 +330,30 @@ public class ActionParsing
                }
               else
               {
-
+               SemanticAnalyzer.SemancticError = true;
+               Controller.ErrorExpected('{');
+               return;
               } 
          }
          else
          {
-
+          SemanticAnalyzer.SemancticError = true;
+          Controller.ExpressionInvalidate(tokens[pos + 3]);
+          return;
          }
        }
        else
        {
-
+         SemanticAnalyzer.SemancticError = true;
+         Controller.ExpressionInvalidate(tokens[pos + 2]);
+         return;
        }
       }
       else
       {
-
+         SemanticAnalyzer.SemancticError = true;
+         Controller.ExpressionInvalidate(tokens[pos + 1]);
+         return;
       }     
    }
    else if(tokens[pos].Type == TypeToken.While)
@@ -316,7 +374,9 @@ public class ActionParsing
    }
    else
    {
-
+      SemanticAnalyzer.SemancticError = true;
+      Controller.ExpressionInvalidate(tokens[pos]);
+      return;
    }
  }
   
