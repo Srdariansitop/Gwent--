@@ -15,7 +15,7 @@ public class OnActivaction
   public string PredicateType;
 
 
-  public static void Selector(List<Token> tokens , int posinit , int posfinal)
+  public static void Selector(List<Token> tokens , int posinit , int posfinal,string Memory)
   {
     if(posinit >= posfinal)
     {
@@ -27,8 +27,15 @@ public class OnActivaction
       {
         if(tokens[posinit + 2].Type == TypeToken.SourceTemp)
         {
-           CompilerCard.OnActivactionEffects.Source = (string)tokens[posinit + 2].Value;
-           Selector(tokens,posinit + 3, posfinal);
+          if(Memory == "OnActivacion")
+          {
+          CompilerCard.OnActivactionEffects.Source = (string)tokens[posinit + 2].Value;
+          }
+          else if(Memory == "PostAction")
+          {
+          CompilerCard.PostAction.Source = (string)tokens[posinit + 2].Value;
+          } 
+          Selector(tokens,posinit + 3, posfinal,Memory);
         }
         else
         {
@@ -48,8 +55,15 @@ public class OnActivaction
         {
           if(tokens[posinit + 2].Type == TypeToken.Bool)
           {
-           CompilerCard.OnActivactionEffects.Single = (bool)tokens[posinit + 2].Value;
-           Selector(tokens,posinit + 3, posfinal);
+           if(Memory == "OnActivacion")
+           {
+            CompilerCard.OnActivactionEffects.Single = (bool)tokens[posinit + 2].Value;
+           }
+           else if(Memory == "PostAction")
+           {
+            CompilerCard.PostAction.Single = (bool)tokens[posinit + 2].Value;
+           }
+           Selector(tokens,posinit + 3, posfinal,Memory);
           }
           else
           {
@@ -65,8 +79,8 @@ public class OnActivaction
     }
     else if(tokens[posinit].Type == TypeToken.Predicate)
     {
-      Predicate(tokens,posinit + 1);
-      Selector(tokens,posinit + 8,posfinal);
+      Predicate(tokens,posinit + 1,Memory);
+      Selector(tokens,posinit + 8,posfinal,Memory);
     }
     else
     {
@@ -75,7 +89,7 @@ public class OnActivaction
     }
   }
 
-   public static void Predicate(List<Token> tokens , int posinicial)
+   public static void Predicate(List<Token> tokens , int posinicial , string Memory)
    {
     
     if(tokens[posinicial].Type == TypeToken.ParenthesisLeft)
@@ -92,9 +106,22 @@ public class OnActivaction
                   {
                      if(tokens[posinicial + 6].Type == TypeToken.Number)
                      {
+                        if(Memory == "OnActivacion")
+                        {
                         CompilerCard.OnActivactionEffects.PredicateType = (string)tokens[posinicial + 4].Value;
                         CompilerCard.OnActivactionEffects.PredicateParam = (string)tokens[posinicial + 6].Value;
                         CompilerCard.OnActivactionEffects.Signe = tokens[posinicial + 5].Type;
+                        }
+                        else if(Memory == "PostAction")
+                        {
+                        CompilerCard.PostAction.PredicateType = (string)tokens[posinicial + 4].Value;
+                        CompilerCard.PostAction.PredicateParam = (string)tokens[posinicial + 6].Value;
+                        CompilerCard.PostAction.Signe = tokens[posinicial + 5].Type;
+                        }
+                        else 
+                        {
+                          return;
+                        }
                      }
                      else
                      {
@@ -107,8 +134,20 @@ public class OnActivaction
                   {
                     if(tokens[posinicial + 6].Type == TypeToken.Red || tokens[posinicial + 6].Type == TypeToken.Legend)
                      {
+                       if(Memory == "OnActivacion")
+                       {
                         CompilerCard.OnActivactionEffects.PredicateType = (string)tokens[posinicial + 4].Value;
                         CompilerCard.OnActivactionEffects.PredicateParam = (string)tokens[posinicial + 6].Value;
+                       }
+                       else if(Memory == "PostAction")
+                       {
+                        CompilerCard.PostAction.PredicateType = (string)tokens[posinicial + 4].Value;
+                        CompilerCard.PostAction.PredicateParam = (string)tokens[posinicial + 6].Value;
+                       }
+                       else
+                       {
+                        return;
+                       }
                      }
                      else
                      {
@@ -121,8 +160,20 @@ public class OnActivaction
                   {
                      if(tokens[posinicial + 6 ].Type == TypeToken.Meele || tokens[posinicial + 6 ].Type == TypeToken.Siege || tokens[posinicial + 6 ].Type == TypeToken.Distance || tokens[posinicial + 6 ].Type == TypeToken.Leader || tokens[posinicial + 6 ].Type == TypeToken.Clime || tokens[posinicial + 6 ].Type == TypeToken.Increase )
                      {
+                        if(Memory == "OnActivacion")
+                        {
                         CompilerCard.OnActivactionEffects.PredicateType = (string)tokens[posinicial + 4].Value;
                         CompilerCard.OnActivactionEffects.PredicateParam = (string)tokens[posinicial + 6].Value;
+                        }
+                        else if(Memory == "PostAction")
+                        {
+                        CompilerCard.PostAction.PredicateType = (string)tokens[posinicial + 4].Value;
+                        CompilerCard.PostAction.PredicateParam = (string)tokens[posinicial + 6].Value;
+                        }
+                        else
+                        {
+                          return;
+                        }
                      }
                      else
                      {
@@ -135,8 +186,20 @@ public class OnActivaction
                   {
                      if(tokens[posinicial + 6].Type == TypeToken.Meele || tokens[posinicial + 6].Type == TypeToken.Siege || tokens[posinicial + 6].Type == TypeToken.Distance)
                      {
+                       if(Memory == "OnActivacion")
+                       {
                         CompilerCard.OnActivactionEffects.PredicateType = (string)tokens[posinicial + 4].Value;
                         CompilerCard.OnActivactionEffects.PredicateParam = (string)tokens[posinicial + 6].Value;
+                       }
+                       else if(Memory == "PostAction")
+                       {
+                        CompilerCard.PostAction.PredicateType = (string)tokens[posinicial + 4].Value;
+                        CompilerCard.PostAction.PredicateParam = (string)tokens[posinicial + 6].Value;
+                       }
+                       else
+                       {
+                        return;
+                       }
                      }
                      else
                      {

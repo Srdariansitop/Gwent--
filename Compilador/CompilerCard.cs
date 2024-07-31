@@ -13,7 +13,9 @@ public class CompilerCard : MonoBehaviour
    public static int Power;
    public static bool PowerBool;
    public static bool OnActivation;
+   public static bool PostActionBoolean;
    public static OnActivaction OnActivactionEffects = new OnActivaction();
+   public static PostAction PostAction = new PostAction();
 
            ///<summary>
           ///Maquina de Estados Recursiva utilizada para Parsear y dar valor a las propiedades de la Carta

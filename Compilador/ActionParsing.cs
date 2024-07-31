@@ -21,7 +21,7 @@ public class ActionParsing
         string Method = WhichMethodContext((string)tokens[pos].Value);
         if(Method == "Find")
         {
-          OnActivaction.Predicate(tokens,pos+2);
+          OnActivaction.Predicate(tokens,pos+2,"Nothing");
           if(tokens[pos + 9].Type == TypeToken.ParenthesisRigth)
           {
             if(tokens[pos + 10].Type == TypeToken.PuntComa)

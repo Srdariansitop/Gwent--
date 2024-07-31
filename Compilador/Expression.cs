@@ -120,7 +120,7 @@ public class Expression : MonoBehaviour
                     else
                     {
                     SemanticAnalyzer.SemancticError = true;
-                    Debug.Log("You have to define the" +(string)actually[posinicial+ 2].Value + "effect beforehand");
+                    Debug.Log("You have to define the " +(string)actually[posinicial+ 2].Value + " effect beforehand");
                     }
                }
                else
@@ -182,13 +182,35 @@ public class Expression : MonoBehaviour
         {
           int posfinal = posinicial + 2;
           SemanticAnalyzer.ExitContext(ref posfinal , actually,0);
-          OnActivaction.Selector(actually,posinicial +2 ,posfinal - 1);
+          OnActivaction.Selector(actually,posinicial +2 ,posfinal - 1,"OnActivacion");
           ParsingOnActivaction(actually,posfinal);
         }
         else
         {
-
+          SemanticAnalyzer.SemancticError = true;
+          Controller.ErrorExpected('{'); 
         }
+      }
+      else if(actually[posinicial].Type == TypeToken.PostAction)
+      {
+          if(actually[posinicial + 1].Type == TypeToken.KeyLeft)
+          {
+          int posfinal = posinicial + 2;
+          SemanticAnalyzer.ExitContext(ref posfinal , actually,0);
+          CompilerCard.PostActionBoolean = true;
+          PostAction.PostActionParsing(actually,posinicial + 2,posfinal -1);
+          ParsingOnActivaction(actually,posfinal);
+          }
+          else
+          {
+          SemanticAnalyzer.SemancticError = true;
+          Controller.ErrorExpected('{'); 
+          }
+      }
+      else
+      {
+        SemanticAnalyzer.SemancticError = true;
+        Controller.ExpressionInvalidate(actually[posinicial]); 
       }
     }
 

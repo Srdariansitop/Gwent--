@@ -136,6 +136,8 @@ public class Controller : MonoBehaviour
           CompilerCard.PowerBool = new bool();
           CompilerCard.OnActivation = new bool();
           CompilerCard.OnActivactionEffects = new OnActivaction();
+          CompilerCard.PostAction = new PostAction();
+          CompilerCard.PostActionBoolean = new bool();
           CompilerEffect.ActionTokens = new List<Token>();
           CompilerEffect.Params = new List<Param>();
           CompilerEffect.NameEffect = null;

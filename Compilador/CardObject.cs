@@ -20,7 +20,7 @@ public class CardObject : MonoBehaviour
  private GameObject spriteGigante;
  public SpriteRenderer S;
  public OnActivaction onActivaction;
- 
+ public PostAction postAction;
 
   public void InstanciateNewCard(int power,string name , string faction,string type,string[]range)
   {
@@ -43,6 +43,10 @@ public class CardObject : MonoBehaviour
    if(CompilerCard.OnActivation == true)
    {
     onActivaction = CompilerCard.OnActivactionEffects;
+   }
+   if(CompilerCard.PostActionBoolean == true)
+   {
+    postAction = CompilerCard.PostAction;
    }
    PrefabUtility.SaveAsPrefabAsset(gameObject,"Assets/Resources/Card"+ Controller.NumCard + ".prefab");
    GameObject ImageWindscript = GameObject.Find("Image");

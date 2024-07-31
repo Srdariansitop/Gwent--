@@ -508,6 +508,9 @@ public class Lexer
                         case "target.Name":
                               return(new Token("target.Name",TypeToken.TargetProps));
 
+                        case "PostAction":
+                              return(new Token("PostAction",TypeToken.PostAction));
+
                         default:
                             return(new Token(word,TypeToken.Var));
                             
