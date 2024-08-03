@@ -43,7 +43,7 @@ public class ActionParsing
           }
           
         }
-        else if(Method == "Push" || Method == "SendBootom" || Method == "Remove")
+        else if(Method == "Push" || Method == "SendBootom" || Method == "Remove" || Method == "Add")
         {
            if(tokens[pos + 2].Type == TypeToken.target || tokens[pos + 2].Type == TypeToken.Var && TypeTokenCard(tokens,(string)tokens[pos + 2].Value,pos))
            {
@@ -733,6 +733,30 @@ public static string WhichMethodContext(string method)
    }
  }
  return result;
+}
+
+   ///<summary>
+   ///Este metodo es para saber cual fuente esta usando un contexto
+   ///</summary>
+public static string WichSourceContext(string source)
+{
+   string result = "";
+   for (int i = 0; i < source.Length; i++)
+   {
+     if (source[i] == '.' )
+      {
+         for (int j = i + 1; j < source.Length; j++)
+         {
+            if(source[j] == '.')
+            {
+               break;
+            }
+            result += source[j];
+         }
+         break;
+      }
+   }
+   return result;
 }
 
    ///<summary>

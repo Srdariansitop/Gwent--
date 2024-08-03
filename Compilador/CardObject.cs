@@ -294,12 +294,32 @@ public bool Content(string RangeString)
   {
     List<GameObject> Source = OnActivaction.SourceReturn(onActivaction.Source,Faction);
     for(int i = 0 ; i < onActivaction.effects.Count ; i++)
-    {  
-      Lexer lexer = new Lexer();
-      List<Token> tokens = lexer.Tokenizar(onActivaction.effects[i].GetComponent<Effect>().Acction);
+    { 
+      Lexer lexer = new Lexer(); 
+      List<Token> tokens =  lexer.Tokenizar(onActivaction.effects[i].GetComponent<Effect>().Acction);
+      Node Parent = new Node(new List<Node>(),"Parent");
+      Effect.TreeAction(Parent,tokens,0,tokens.Count);
+      NodeDebug(Parent);
+      EvaluateExpressionAction.EvaluateNode(Parent,Source,Faction);
     }
   }
 
+  public static void NodeDebug(Node node)
+  {
+    if(node.Children.Count == 0)
+    {
+      Debug.Log(node.Value);
+    }
+    else
+    {
+      Debug.Log(node.Value);
+      foreach(var a in node.Children)
+      {
+        NodeDebug(a);
+      }
+    }
+    
+  }
     void Update()
     {
       spriteGigante = GameObject.FindGameObjectWithTag("Show Card");
