@@ -94,6 +94,26 @@ public class CardObject : MonoBehaviour
         {
             Transform canvasTransform = canvasObject.transform;
             gameObject.transform.SetParent(canvasTransform, false); 
+            Deck deck ;
+            if(Faction == "Red")
+            {
+             deck = GameObject.Find("DeckRed").GetComponent<Deck>();
+            }
+            else
+            {
+             deck = GameObject.Find("DeckLegendarios").GetComponent<Deck>();
+            }
+             for(int i = 0 ; i <  deck.hand.Count ; i++)
+              {
+                Debug.Log(gameObject.name);
+                Debug.Log(deck.hand[i].name);
+                if(deck.hand[i].name + "(Clone)"== gameObject.name)
+                {
+                Debug.Log(i);
+                CardUnidad.InvocadasRival.Add(i);
+                deck.hand.RemoveAt(i);
+                }
+              }
         } 
       gameObject.transform.localScale = new Vector3(2f,2f,0);
       if(Type == "Increase")

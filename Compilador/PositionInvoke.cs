@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PositionInvoke
+public class PositionInvoke : MonoBehaviour
 {
    
 public static string MatrixCardField(int i , int j)
@@ -164,4 +164,16 @@ public static string MatrixCardMagicRival(int i , int j)
   }
 }
 
+  public static void DestroyInstance(List<GameObject>gameObjects)
+{
+  foreach(var card in gameObjects)
+  {
+    string tag = card.tag;
+    GameObject[]instances = GameObject.FindGameObjectsWithTag(tag);
+    foreach(GameObject instance in instances)
+    {
+      Destroy(instance);
+    }
+  }
+}
 }

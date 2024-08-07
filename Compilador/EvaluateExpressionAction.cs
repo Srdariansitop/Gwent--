@@ -68,6 +68,10 @@ if(Method == "Add" || Method == "SendBootom")
  if(keyValuePairs.ContainsKey((string)tokens[2].Value))
  {
   Source.Add((GameObject)keyValuePairs[(string)tokens[2].Value]);
+  if(SourceString == "Hand")
+  {
+
+  }
  }
  else
  {
@@ -89,7 +93,17 @@ else if(Method == "Remove")
 {
  if(keyValuePairs.ContainsKey((string)tokens[2].Value))
  {
-
+  Source.Remove(((GameObject)keyValuePairs[(string)tokens[2].Value]));
+  if(SourceString == "Hand")
+  {
+  GameObject CardTemp = (GameObject)keyValuePairs[(string)tokens[2].Value];
+  string tag = CardTemp.tag;
+  GameObject [] clones = GameObject.FindGameObjectsWithTag(tag);
+  foreach(var x in clones)
+  {
+  x.transform.position = new Vector3(200f,200f,200f);        
+  }
+  }
  }
  else
  {
@@ -100,7 +114,7 @@ else if(Method == "Push")
 {
  if(keyValuePairs.ContainsKey((string)tokens[2].Value))
  {
-
+   Source.Insert(0,(GameObject)keyValuePairs[(string)tokens[2].Value]);
  }
  else
  {
@@ -145,7 +159,7 @@ public static void VarSave(List<Token> tokens, List<GameObject> Source,string Fa
       }
       else if(Method == "Pop")
       {
-        string SourceString = ActionParsing.WichSourceContext((string)tokens[0].Value);
+        string SourceString = ActionParsing.WichSourceContext((string)tokens[2].Value);
         List<GameObject> Sourcetemp = OnActivaction.SourceReturn(SourceString,Faction);
         keyValuePairs.Add((string)tokens[0].Value,Sourcetemp[0]);
         Sourcetemp.RemoveAt(0);

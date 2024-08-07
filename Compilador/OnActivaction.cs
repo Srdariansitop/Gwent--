@@ -285,7 +285,7 @@ public class OnActivaction
       }
       return list;
     }
-    else if(Source == "Deck" && Faction == "Red" || Source == "Deck" && Faction == "Legend")
+    else if(Source == "Deck" && Faction == "Red" || Source == "OtherDeck" && Faction == "Legend")
     {
      return  deck.deck;
     }
@@ -296,5 +296,5 @@ public class OnActivaction
  
   }
 
-
+  
 }
