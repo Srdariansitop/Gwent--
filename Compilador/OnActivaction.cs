@@ -246,18 +246,18 @@ public class OnActivaction
     }
    }
 
-  public static List<GameObject> SourceReturn(string Source , string Faction)
+  public static  List<GameObject> SourceReturn(string Source , string Faction)
   {
     Deck deck = GameObject.Find("DeckRed").GetComponent<Deck>();
     Deck deck1 = GameObject.Find("DeckLegendarios").GetComponent<Deck>();
     GameObject canvasObject = GameObject.FindGameObjectWithTag("Invocadas");
     if(Source == "Hand" && Faction == "Red" || Source == "OtherHand" && Faction == "Legend")
     {
-      return deck.hand;
+      return  deck.hand;
     }
     else if(Source == "Hand" && Faction == "Legend" || Source == "OtherHand" && Faction == "Red")
     {
-      return deck1.hand;
+      return  deck1.hand;
     }
     else if(Source == "Field" && Faction == "Red" || Source == "OtherField" && Faction == "Legend" )
     {
@@ -287,11 +287,11 @@ public class OnActivaction
     }
     else if(Source == "Deck" && Faction == "Red" || Source == "Deck" && Faction == "Legend")
     {
-     return deck.deck;
+     return  deck.deck;
     }
     else 
     {
-     return deck1.deck;
+     return  deck1.deck;
     }
  
   }

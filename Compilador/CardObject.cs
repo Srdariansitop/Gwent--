@@ -301,6 +301,10 @@ public bool Content(string RangeString)
       Effect.TreeAction(Parent,tokens,0,tokens.Count);
       NodeDebug(Parent);
       EvaluateExpressionAction.EvaluateNode(Parent,Source,Faction);
+      foreach(var a in EvaluateExpressionAction.keyValuePairs)
+      {
+        Debug.Log("Key " + a.Key + " Value " + a.Value);
+      }
     }
   }
 
