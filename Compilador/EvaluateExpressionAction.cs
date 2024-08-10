@@ -6,7 +6,10 @@ using UnityEditor;
 using UnityEngine;
 using System.Linq;
 using System.ComponentModel;
-public class EvaluateExpressionAction 
+using System.Diagnostics;
+using UnityEngine.AI;
+using Unity.VisualScripting.ReorderableList.Element_Adder_Menu;
+public class EvaluateExpressionAction : MonoBehaviour
 {
 public static Dictionary<string,object> keyValuePairs = new Dictionary<string, object>();
  public static void ResetList()
@@ -70,7 +73,7 @@ if(Method == "Add" || Method == "SendBootom")
   Source.Add((GameObject)keyValuePairs[(string)tokens[2].Value]);
   if(SourceString == "Hand")
   {
-
+    InstanceHand(Source,Faction);
   }
  }
  else
@@ -115,6 +118,10 @@ else if(Method == "Push")
  if(keyValuePairs.ContainsKey((string)tokens[2].Value))
  {
    Source.Insert(0,(GameObject)keyValuePairs[(string)tokens[2].Value]);
+  if(SourceString == "Hand")
+  {
+    InstanceHand(Source,Faction);
+  }
  }
  else
  {
@@ -143,6 +150,10 @@ public static void VarSave(List<Token> tokens, List<GameObject> Source,string Fa
     {
      keyValuePairs[(string)tokens[0].Value] = keyValuePairs[(string)tokens[2].Value];
     }
+    else
+    {
+
+    }
    }
    else
    {
@@ -155,7 +166,11 @@ public static void VarSave(List<Token> tokens, List<GameObject> Source,string Fa
       string Method = ActionParsing.WhichMethodContext((string)tokens[2].Value);
       if(Method == "Find")
       {
-
+        
+        string SourceString = ActionParsing.WichSourceContext((string)tokens[2].Value);
+        List<GameObject> Sourcetemp = OnActivaction.SourceReturn(SourceString,Faction);
+        List<GameObject> newList = FindCondition(Sourcetemp,tokens);
+        keyValuePairs.Add((string)tokens[2].Value,newList);
       }
       else if(Method == "Pop")
       {
@@ -195,6 +210,141 @@ number -= 1;
 keyValuePairs[name] = number;
 }
 
+public static void InstanceHand(List<GameObject> Source, string Faction)
+{
+ PositionInvoke.DestroyInstance(Source);
+ Deck deck ;
+ if(Faction == "Red")
+ {
+  deck = GameObject.Find("DeckRed").GetComponent<Deck>();
+ }
+ else
+ {
+ deck = GameObject.Find("DeckLegendarios").GetComponent<Deck>();
+ } 
+Transform handposi = deck.transform.Find("HandPosition");
+    //Mostrar tablero
+    for(int i = 0 ; i < Source.Count ; i++)
+    {
+        GameObject card = Source[i];
+        Transform pos = handposi.GetChild(i);
+        GameObject nuevainstancia = Instantiate(card,pos.position,Quaternion.identity);
+        //Debug.Log(card);
+        float scale = 0.02590f;
+        nuevainstancia.transform.localScale = new Vector3(scale,scale,scale);       
+    }  
+}
 
+public static List<GameObject> FindCondition(List<GameObject> Source , List<Token> tokens)
+{
+  string prop = "";
+  TypeToken Signe = TypeToken.Action;
+  string SecondCondition = "";
+  for(int i = 0 ; i < tokens.Count ;i ++)
+  {
+    if(tokens[i].Type == TypeToken.GreaterThan)
+    {
+     prop = (string)tokens[i + 1].Value;
+     if(tokens[i + 2].Type == TypeToken.Equal)
+     {
+     Signe = TypeToken.EqualEqual;
+     SecondCondition = (string)tokens[i + 4].Value;
+     }
+     else if(tokens[i + 2].Type == TypeToken.GreaterThan)
+     {
+        if(tokens[i + 3].Type == TypeToken.Equal)
+        {
+         Signe = TypeToken.GreaterEqualThan;
+         SecondCondition = (string)tokens[i + 4].Value;
+        }
+        else
+        {
+        Signe = TypeToken.GreaterThan;
+        SecondCondition = (string)tokens[i + 3].Value;
+        }
+     }
+     else
+     {
+        if(tokens[i + 3].Type == TypeToken.Equal)
+        {
+          Signe = TypeToken.LessThan;
+         SecondCondition = (string)tokens[i + 4].Value;
+        }
+        else
+        {
+        Signe = TypeToken.SmallerThan;
+        SecondCondition = (string)tokens[i + 3].Value;
+        }
+     }
 
+    }
+  }
+  UnityEngine.Debug.Log(prop + " " +  " " + SecondCondition);
+  List<GameObject> result = new List<GameObject>();
+  //Iterar sobre Source
+  for(int i = 0 ; i  < Source.Count ; i++)
+  {
+    CardUnidad cardUnidad = Source[i].GetComponent<CardUnidad>();
+    if(prop == "Range")
+    {
+      if(SecondCondition == "Siege")
+      {
+       if(cardUnidad.Tipo == "Asedio" || cardUnidad.Tipo == "Silver" || cardUnidad.Tipo == "Oro")
+       {
+          result.Add(Source[i]);
+       }
+      }
+      else if(SecondCondition == "Distance")
+      {
+        if(cardUnidad.Tipo == "Distancia" || cardUnidad.Tipo == "Silver" || cardUnidad.Tipo == "Oro")
+       {
+        result.Add(Source[i]);
+       }
+      }
+      else
+      {
+        if(cardUnidad.Tipo == "Cuerpo a Cuerpo" || cardUnidad.Tipo == "Silver" || cardUnidad.Tipo == "Oro")
+       {
+       result.Add(Source[i]);
+       }
+      }
+    }
+    else if(prop ==  "Type")
+    {
+     if(cardUnidad.Tipo == "Cuerpo a Cuerpo" && SecondCondition == "Meele" || cardUnidad.Tipo == "Asedio" && SecondCondition == "Siege" || cardUnidad.Tipo == "Distancia" && SecondCondition == "Distance" || cardUnidad.Tipo == "Aumento" && SecondCondition == "Increase" || cardUnidad.Tipo == "Clima" && SecondCondition == "Clime" || cardUnidad.Tipo == SecondCondition)
+     {
+      result.Add(Source[i]);
+     }
+    }
+    else if(prop == "Faction")
+    {
+      if(SecondCondition == "Red" )
+      {
+       if(cardUnidad.Faction == "Red")
+       {
+        result.Add(Source[i]);
+       }  
+      }
+      else 
+      {
+       if(cardUnidad.Faction == "Legend")
+       {
+        result.Add(Source[i]);
+       }
+      }
+    }
+    else if(prop == "Power")
+    {
+      if(Signe == TypeToken.GreaterEqualThan)
+      {
+
+      }
+      else if(Signe == TypeToken.GreaterThan)
+      {
+        
+      }
+    }
+  }
+ return result;
+}
 }

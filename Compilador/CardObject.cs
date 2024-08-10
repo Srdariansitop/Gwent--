@@ -105,11 +105,8 @@ public class CardObject : MonoBehaviour
             }
              for(int i = 0 ; i <  deck.hand.Count ; i++)
               {
-                Debug.Log(gameObject.name);
-                Debug.Log(deck.hand[i].name);
                 if(deck.hand[i].name + "(Clone)"== gameObject.name)
                 {
-                Debug.Log(i);
                 CardUnidad.InvocadasRival.Add(i);
                 deck.hand.RemoveAt(i);
                 }
