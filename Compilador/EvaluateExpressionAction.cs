@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using UnityEngine.AI;
 using Unity.VisualScripting.ReorderableList.Element_Adder_Menu;
+using UnityEditor.Search;
 public class EvaluateExpressionAction : MonoBehaviour
 {
 public static Dictionary<string,object> keyValuePairs = new Dictionary<string, object>();
@@ -17,13 +18,13 @@ public static Dictionary<string,object> keyValuePairs = new Dictionary<string, o
  keyValuePairs = new Dictionary<string, object>();
  }
 
-public static void EvaluateNode(Node nodeactual,List<GameObject> source,string faction)
+public static void EvaluateNode(Node nodeactual,List<GameObject> source,string faction,int index)
 {
   if (NotTokenList(nodeactual) && (string)nodeactual.Value == "Parent")
   {
     foreach(var a in nodeactual.Children)
     {
-      EvaluateNode(a,source,faction);
+      EvaluateNode(a,source,faction,0);
     }
   }
   else if (NotTokenList(nodeactual) && (string)nodeactual.Value == "For")
@@ -32,7 +33,7 @@ public static void EvaluateNode(Node nodeactual,List<GameObject> source,string f
     {
       foreach (var a in nodeactual.Children)
       {
-        EvaluateNode(a,source,faction);
+        EvaluateNode(a,source,faction,i);
       }
     }
   }
@@ -45,11 +46,16 @@ public static void EvaluateNode(Node nodeactual,List<GameObject> source,string f
     List<Token> tokens = (List<Token>)nodeactual.Value;
     if (tokens[0].Type == TypeToken.Var)
     {
-      VarSave(tokens,source,faction);
+      VarSave(tokens,source,faction,index);
+    }
+    else if(tokens[0].Type == TypeToken.TargetProps)
+    {
+      UnityEngine.Debug.Log(index);
+      TargetsPropsEvaluate(tokens,source,index);
     }
     else
     {
-     ContextMethodAnalyzer(tokens,faction);
+     ContextMethodAnalyzer(tokens,faction,source,index);
     }
   }
 }
@@ -60,7 +66,7 @@ public static void EvaluateNode(Node nodeactual,List<GameObject> source,string f
   catch { return false;}   
 }
 
-public static void ContextMethodAnalyzer(List<Token> tokens,string Faction)
+public static void ContextMethodAnalyzer(List<Token> tokens,string Faction,List<GameObject> SourceGlobal , int index)
 {
 string Method = ActionParsing.WhichMethodContext((string)tokens[0].Value);
 string SourceString = ActionParsing.WichSourceContext((string)tokens[0].Value);
@@ -78,7 +84,11 @@ if(Method == "Add" || Method == "SendBootom")
  }
  else
  {
-
+   Source.Add(SourceGlobal[index]);
+  if(SourceString == "Hand")
+  {
+    InstanceHand(Source,Faction);
+  }
  }
 }
 else if(Method == "Shuffle")
@@ -97,7 +107,12 @@ else if(Method == "Remove")
  if(keyValuePairs.ContainsKey((string)tokens[2].Value))
  {
   Source.Remove(((GameObject)keyValuePairs[(string)tokens[2].Value]));
-  if(SourceString == "Hand")
+ }
+ else
+ {
+  Source.Remove(SourceGlobal[index]);
+ }
+ if(SourceString == "Hand")
   {
   GameObject CardTemp = (GameObject)keyValuePairs[(string)tokens[2].Value];
   string tag = CardTemp.tag;
@@ -107,17 +122,12 @@ else if(Method == "Remove")
   x.transform.position = new Vector3(200f,200f,200f);        
   }
   }
- }
- else
- {
-  
- }
 }
 else if(Method == "Push")
 {
  if(keyValuePairs.ContainsKey((string)tokens[2].Value))
  {
-   Source.Insert(0,(GameObject)keyValuePairs[(string)tokens[2].Value]);
+  Source.Insert(0,(GameObject)keyValuePairs[(string)tokens[2].Value]);
   if(SourceString == "Hand")
   {
     InstanceHand(Source,Faction);
@@ -125,15 +135,56 @@ else if(Method == "Push")
  }
  else
  {
-  
+  Source.Insert(0,SourceGlobal[index]);
+  if(SourceString == "Hand")
+  {
+    InstanceHand(Source,Faction);
+  }
  }
 }
 
 
 }
 
-
-public static void VarSave(List<Token> tokens, List<GameObject> Source,string Faction)
+public static void TargetsPropsEvaluate(List<Token> expression , List<GameObject>SourceGlobal , int index)
+{
+ string prop = ActionParsing.ExtractToProp((string)expression[0].Value);
+ CardUnidad cardUnidad = SourceGlobal[index].GetComponent<CardUnidad>();
+ if(prop == "Power")
+ {
+    if(expression[1].Type == TypeToken.Sum)
+    {
+      string temp = (string)expression[3].Value;
+      int temp2 = int.Parse(temp);
+      cardUnidad.Attack += temp2;
+    }
+    else if(expression[1].Type == TypeToken.Rest)
+    {
+      string temp = (string)expression[3].Value;
+      int temp2 = int.Parse(temp);
+      cardUnidad.Attack -= temp2;
+    }
+    else
+    {
+      string temp = (string)expression[2].Value;
+      int temp2 = int.Parse(temp);
+      cardUnidad.Attack = temp2;
+    }
+ }
+ else if(prop == "Faction")
+ {
+  cardUnidad.Faction = (string)expression[2].Value;
+ }
+ else if(prop == "Type")
+ {
+  cardUnidad.Tipo = (string)expression[2].Value;
+ }
+ else
+ {
+  cardUnidad.Name = (string)expression[2].Value;
+ }
+}
+public static void VarSave(List<Token> tokens, List<GameObject> Source,string Faction,int index)
 {
   //Existe la variable
    if(keyValuePairs.ContainsKey((string)tokens[0].Value))
@@ -150,6 +201,10 @@ public static void VarSave(List<Token> tokens, List<GameObject> Source,string Fa
     {
      keyValuePairs[(string)tokens[0].Value] = keyValuePairs[(string)tokens[2].Value];
     }
+    else if(tokens[2].Type == TypeToken.target)
+    {
+      keyValuePairs.Add((string)tokens[0].Value,Source[index]);
+    }
     else
     {
 
@@ -165,8 +220,7 @@ public static void VarSave(List<Token> tokens, List<GameObject> Source,string Fa
     {
       string Method = ActionParsing.WhichMethodContext((string)tokens[2].Value);
       if(Method == "Find")
-      {
-        
+      { 
         string SourceString = ActionParsing.WichSourceContext((string)tokens[2].Value);
         List<GameObject> Sourcetemp = OnActivaction.SourceReturn(SourceString,Faction);
         List<GameObject> newList = FindCondition(Sourcetemp,tokens);
@@ -194,7 +248,6 @@ public static void VarSave(List<Token> tokens, List<GameObject> Source,string Fa
     } 
    }
 }
-
 
 public static void ModVar(string name , TypeToken operation)
 {
@@ -245,41 +298,27 @@ public static List<GameObject> FindCondition(List<GameObject> Source , List<Toke
     if(tokens[i].Type == TypeToken.GreaterThan)
     {
      prop = (string)tokens[i + 1].Value;
-     if(tokens[i + 2].Type == TypeToken.Equal)
+     if(prop == "Power")
      {
-     Signe = TypeToken.EqualEqual;
-     SecondCondition = (string)tokens[i + 4].Value;
-     }
-     else if(tokens[i + 2].Type == TypeToken.GreaterThan)
-     {
-        if(tokens[i + 3].Type == TypeToken.Equal)
-        {
-         Signe = TypeToken.GreaterEqualThan;
-         SecondCondition = (string)tokens[i + 4].Value;
-        }
-        else
-        {
-        Signe = TypeToken.GreaterThan;
-        SecondCondition = (string)tokens[i + 3].Value;
-        }
+      if(tokens[i + 2].Type == TypeToken.Equal)
+      {
+      Signe = TypeToken.EqualEqual;
+      SecondCondition = (string)tokens[i + 4].Value;
+      }
+      else
+      {
+      Signe = tokens[i + 2].Type;
+      SecondCondition = (string)tokens[i + 3].Value;
+      }
      }
      else
      {
-        if(tokens[i + 3].Type == TypeToken.Equal)
-        {
-          Signe = TypeToken.LessThan;
-         SecondCondition = (string)tokens[i + 4].Value;
-        }
-        else
-        {
-        Signe = TypeToken.SmallerThan;
-        SecondCondition = (string)tokens[i + 3].Value;
-        }
+      Signe = TypeToken.EqualEqual;
+      SecondCondition = (string)tokens[i + 4].Value;
      }
-
+     break;
     }
   }
-  UnityEngine.Debug.Log(prop + " " +  " " + SecondCondition);
   List<GameObject> result = new List<GameObject>();
   //Iterar sobre Source
   for(int i = 0 ; i  < Source.Count ; i++)
@@ -336,12 +375,39 @@ public static List<GameObject> FindCondition(List<GameObject> Source , List<Toke
     else if(prop == "Power")
     {
       if(Signe == TypeToken.GreaterEqualThan)
-      {
-
+      {     
+        if(cardUnidad.Attack >= int.Parse(SecondCondition))
+        {
+          result.Add(Source[i]);
+        }
       }
       else if(Signe == TypeToken.GreaterThan)
       {
-        
+        if(cardUnidad.Attack > int.Parse(SecondCondition))
+        {
+          result.Add(Source[i]);
+        }
+      }
+      else if(Signe == TypeToken.LessThan)
+      {
+        if(cardUnidad.Attack <= int.Parse(SecondCondition))
+        {
+          result.Add(Source[i]);
+        }
+      }
+      else if(Signe == TypeToken.SmallerThan)
+      {
+        if(cardUnidad.Attack < int.Parse(SecondCondition))
+        {
+          result.Add(Source[i]);
+        }
+      }
+      else
+      {
+        if(cardUnidad.Attack == int.Parse(SecondCondition))
+        {
+          result.Add(Source[i]);
+        }
       }
     }
   }

@@ -13,6 +13,15 @@ public class Param
      Type = type;
      Name = name;
    }
+
+  public static void InstanceParamofCard(List<Param> @params)
+  {
+   foreach(var param in @params)
+   {
+    EvaluateExpressionAction.keyValuePairs.Add(param.Name,param.ValueString);
+   }
+  }
+
 }
 public enum TypeParam
 {

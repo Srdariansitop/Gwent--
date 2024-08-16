@@ -106,9 +106,33 @@ public class ActionParsing
    }
    else if(tokens[pos].Type == TypeToken.TargetProps)
    {
+      if(ExtractToProp((string)tokens[pos].Value) == "Power" && (tokens[pos + 2].Type == TypeToken.Number ||tokens[pos + 2].Type == TypeToken.Var && CompareType(tokens[pos + 2],tokens,TypeToken.Number,pos) ||tokens[pos + 2].Type == TypeToken.Var &&  CompareTypeOfParams(tokens[pos + 2],TypeToken.Number)))
+      {
+         if(tokens[pos + 1].Type == TypeToken.Equal || tokens[pos + 1].Type == TypeToken.EqualSum || tokens[pos + 1].Type == TypeToken.EqualRest)
+         {
+            if(tokens[pos + 3].Type == TypeToken.PuntComa)
+            {
+              ParsingActionEffects(tokens,pos + 4,posfinal);
+            }
+            else
+            {
+            SemanticAnalyzer.SemancticError = true;
+            Controller.ExpressionInvalidate(tokens[pos + 1]);
+            return;
+            } 
+         }
+         else
+         {
+            SemanticAnalyzer.SemancticError = true;
+            Controller.ErrorExpected(';');
+            return;
+         }
+      }
+      else
+      {
       if(tokens[pos + 1].Type == TypeToken.Equal)
       {
-         if(ExtractToProp((string)tokens[pos].Value) == "Power" && (tokens[pos + 2].Type == TypeToken.Number ||tokens[pos + 2].Type == TypeToken.Var && CompareType(tokens[pos + 2],tokens,TypeToken.Number,pos) ||tokens[pos + 2].Type == TypeToken.Var &&  CompareTypeOfParams(tokens[pos + 2],TypeToken.Number)) || ExtractToProp((string)tokens[pos].Value) == "Name" && (tokens[pos + 2].Type == TypeToken.String || tokens[pos + 2].Type == TypeToken.Var && CompareType(tokens[pos +2],tokens,TypeToken.String,pos) || tokens[pos + 2].Type == TypeToken.Var && CompareTypeOfParams(tokens[pos + 2] , TypeToken.String)))
+         if(ExtractToProp((string)tokens[pos].Value) == "Name" && (tokens[pos + 2].Type == TypeToken.String || tokens[pos + 2].Type == TypeToken.Var && CompareType(tokens[pos +2],tokens,TypeToken.String,pos) || tokens[pos + 2].Type == TypeToken.Var && CompareTypeOfParams(tokens[pos + 2] , TypeToken.String)))
          {
             if(tokens[pos + 3].Type == TypeToken.PuntComa)
             {
@@ -180,12 +204,14 @@ public class ActionParsing
        Controller.ErrorExpected('=');
        return;
       }
+      }
+
    }
    else if(tokens[pos].Type == TypeToken.Var)
    {
       if(tokens[pos + 1].Type == TypeToken.Equal)
       {
-        if(tokens[pos + 2].Type == TypeToken.Number || tokens[pos + 2].Type == TypeToken.Bool || tokens[pos + 2].Type == TypeToken.String || tokens[pos + 2].Type == TypeToken.ContextPropBoard || tokens[pos + 2].Type == TypeToken.TargetProps)
+        if(tokens[pos + 2].Type == TypeToken.target || tokens[pos + 2].Type == TypeToken.Number || tokens[pos + 2].Type == TypeToken.Bool || tokens[pos + 2].Type == TypeToken.String || tokens[pos + 2].Type == TypeToken.ContextPropBoard || tokens[pos + 2].Type == TypeToken.TargetProps)
         {
             if(tokens[pos + 3].Type == TypeToken.PuntComa)
             {

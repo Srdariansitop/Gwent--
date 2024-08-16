@@ -90,8 +90,7 @@ public class OnActivaction
   }
 
    public static void Predicate(List<Token> tokens , int posinicial , string Memory)
-   {
-    
+   { 
     if(tokens[posinicial].Type == TypeToken.ParenthesisLeft)
     {
         if(tokens[posinicial + 1].Type == TypeToken.unit)
@@ -296,5 +295,147 @@ public class OnActivaction
  
   }
 
-  
+  public static List<GameObject> SelectorInterpreters(List<GameObject> source ,string PredicateParam , bool single , TypeToken signe , string PredicateType)
+  {
+    List<GameObject> result = new List<GameObject>();
+    for(int i = 0 ; i < source.Count ; i++)
+    {
+    CardUnidad cardUnidad = source[i].GetComponent<CardUnidad>();
+    if(PredicateType == "Power")
+    {
+      if(signe == TypeToken.GreaterEqualThan)
+      {     
+        if(cardUnidad.Attack >= int.Parse(PredicateParam))
+        {
+          result.Add(source[i]);
+        if(single == true)
+        {
+          break;
+        }
+        }
+      }
+      else if(signe == TypeToken.GreaterThan)
+      {
+        if(cardUnidad.Attack > int.Parse(PredicateParam))
+        {
+          result.Add(source[i]);
+        if(single == true)
+        {
+          break;
+        }
+        }
+      }
+      else if(signe == TypeToken.LessThan)
+      {
+        if(cardUnidad.Attack <= int.Parse(PredicateParam))
+        {
+          result.Add(source[i]);
+        if(single == true)
+        {
+          break;
+        }
+        }
+      }
+      else if(signe == TypeToken.SmallerThan)
+      {
+        if(cardUnidad.Attack < int.Parse(PredicateParam))
+        {
+          result.Add(source[i]);
+        if(single == true)
+        {
+          break;
+        }
+        }
+      }
+      else
+      {
+        if(cardUnidad.Attack == int.Parse(PredicateParam))
+        {
+          result.Add(source[i]);
+        if(single == true)
+        {
+          break;
+        }
+        }
+      }
+    }
+    else
+    {
+    if(PredicateType == "Range")
+    {
+      if(PredicateParam == "Siege")
+      {
+       if(cardUnidad.Tipo == "Asedio" || cardUnidad.Tipo == "Silver" || cardUnidad.Tipo == "Oro")
+       {
+        result.Add(source[i]);
+        if(single == true)
+        {
+          break;
+        }
+       }
+      }
+      else if(PredicateParam == "Distance")
+      {
+        if(cardUnidad.Tipo == "Distancia" || cardUnidad.Tipo == "Silver" || cardUnidad.Tipo == "Oro")
+       {
+        result.Add(source[i]);
+        if(single == true)
+        {
+          break;
+        }
+       }
+      }
+      else
+      {
+        if(cardUnidad.Tipo == "Cuerpo a Cuerpo" || cardUnidad.Tipo == "Silver" || cardUnidad.Tipo == "Oro")
+       {
+       result.Add(source[i]);
+       if(single == true)
+        {
+          break;
+        }
+       }
+      }
+    }
+    else if(PredicateType ==  "Type")
+    {
+     if(cardUnidad.Tipo == "Cuerpo a Cuerpo" && PredicateParam == "Meele" || cardUnidad.Tipo == "Asedio" && PredicateParam == "Siege" || cardUnidad.Tipo == "Distancia" && PredicateParam == "Distance" || cardUnidad.Tipo == "Aumento" && PredicateParam == "Increase" || cardUnidad.Tipo == "Clima" && PredicateParam == "Clime" || cardUnidad.Tipo == PredicateParam)
+     {
+      Debug.Log("ssa");
+      result.Add(source[i]);
+      if(single == true)
+        {
+          break;
+        }
+     }
+    }
+    else if(PredicateType == "Faction")
+    {
+      if(PredicateParam == "Red" )
+      {
+       if(cardUnidad.Faction == "Red")
+       {
+        result.Add(source[i]);
+        if(single == true)
+        {
+          break;
+        }
+       }  
+      }
+      else 
+      {
+       if(cardUnidad.Faction == "Legend")
+       {
+        result.Add(source[i]);
+        if(single == true)
+        {
+          break;
+        }
+       }
+      }
+    }
+    }
+    }
+    return result;
+  }
 }

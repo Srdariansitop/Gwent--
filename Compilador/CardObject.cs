@@ -310,18 +310,16 @@ public bool Content(string RangeString)
   public void EffectApli()
   {
     List<GameObject> Source = OnActivaction.SourceReturn(onActivaction.Source,Faction);
+    List<GameObject> SourceTemp =  OnActivaction.SelectorInterpreters(Source,onActivaction.PredicateParam,onActivaction.Single,onActivaction.Signe,onActivaction.PredicateType);
     for(int i = 0 ; i < onActivaction.effects.Count ; i++)
     { 
       Lexer lexer = new Lexer(); 
       List<Token> tokens =  lexer.Tokenizar(onActivaction.effects[i].GetComponent<Effect>().Acction);
       Node Parent = new Node(new List<Node>(),"Parent");
       Effect.TreeAction(Parent,tokens,0,tokens.Count);
-      NodeDebug(Parent);
-      EvaluateExpressionAction.EvaluateNode(Parent,Source,Faction);
-      foreach(var a in EvaluateExpressionAction.keyValuePairs)
-      {
-        Debug.Log("Key " + a.Key + " Value " + a.Value);
-      }
+      //NodeDebug(Parent);
+      Param.InstanceParamofCard(onActivaction.effects[i].GetComponent<Effect>().Params);
+      EvaluateExpressionAction.EvaluateNode(Parent,SourceTemp,Faction,0);
     }
   }
 
