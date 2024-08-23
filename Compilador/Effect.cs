@@ -12,7 +12,6 @@ public class Effect : MonoBehaviour
    public  List<Param> Params;
    public  string Name;
    public string Acction;
-  // public Node Parent = new Node(new List<Node>(), "Parent");
 
      ///<summary>
      ///Encargado de Instanciar los valores del efecto para despues guardalo como un prefab

@@ -370,7 +370,7 @@ public class Lexer
                         case "OtherHand":
                               return(new Token("OtherHand",TypeToken.SourceTemp));    
 
-                        case "Parent":
+                        case "parent":
                               return(new Token("Parent",TypeToken.SourceTemp));
 
                         case "Single":
@@ -413,7 +413,7 @@ public class Lexer
                                return(new Token("context.Graveyard",TypeToken.ContextProp));
 
                         case "context.Board":
-                               return(new Token("context.Board",TypeToken.ContextPropBoard));
+                               return(new Token("context.Board",TypeToken.ContextProp));
 
                         case "context.TriggerPlayer":
                                return(new Token("context.TriggerPlayer",TypeToken.ContextTrigger));

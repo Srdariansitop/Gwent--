@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ActionParsing
@@ -211,7 +212,7 @@ public class ActionParsing
    {
       if(tokens[pos + 1].Type == TypeToken.Equal)
       {
-        if(tokens[pos + 2].Type == TypeToken.target || tokens[pos + 2].Type == TypeToken.Number || tokens[pos + 2].Type == TypeToken.Bool || tokens[pos + 2].Type == TypeToken.String || tokens[pos + 2].Type == TypeToken.ContextPropBoard || tokens[pos + 2].Type == TypeToken.TargetProps)
+        if(tokens[pos + 2].Type == TypeToken.target || tokens[pos + 2].Type == TypeToken.Number || tokens[pos + 2].Type == TypeToken.Bool || tokens[pos + 2].Type == TypeToken.String || tokens[pos + 2].Type == TypeToken.ContextProp || tokens[pos + 2].Type == TypeToken.TargetProps ||tokens[pos + 2].Type == TypeToken.ContextTrigger)
         {
             if(tokens[pos + 3].Type == TypeToken.PuntComa)
             {
@@ -246,7 +247,7 @@ public class ActionParsing
             return;
           }
         }
-        else if(tokens[pos + 2].Type == TypeToken.ContextProp || tokens[pos + 2].Type == TypeToken.ContextPseudoMethod)
+        else if(tokens[pos + 2].Type == TypeToken.ContextPseudoMethod)
         {
          if(tokens[pos + 3].Type == TypeToken.ParenthesisLeft)
          {
@@ -682,7 +683,7 @@ public static bool TargetPropValue(List<Token> tokens , int pos , string name , 
    {
     if(tokens[i].Type == TypeToken.Var && (string)tokens[i].Value == name && tokens[i+1].Type == TypeToken.Equal)
     {
-      if(tokens[i + 2].Type == TypeToken.TargetProps && ExtractToProp((string)tokens[i+2].Value) == propieties)
+      if(tokens[i + 2].Type == TypeToken.TargetProps && ExtractToProp((string)tokens[i+2].Value) == propieties || tokens[i + 2].Type == TypeToken.ContextTrigger)
       {
          return true;
       }
@@ -806,4 +807,16 @@ public static bool TypeTokenCard(List<Token> tokens , string namevar,int pos)
  }
  return false;
 } 
+
+public static string WichMethodContextPseudoMethod(string word)
+{
+   string result = "";
+   for(int i = 0 ; i < word.Length ;i++)
+   {
+      if(word[i] == 'O'){break;}
+      result += word[i];
+   }
+   return result;   
+}
+
 }

@@ -321,6 +321,19 @@ public bool Content(string RangeString)
       Param.InstanceParamofCard(onActivaction.effects[i].GetComponent<Effect>().Params);
       EvaluateExpressionAction.EvaluateNode(Parent,SourceTemp,Faction,0);
     }
+    if(postAction != null)
+    {
+      List<GameObject> Source2 ;
+      if(postAction.Source == "Parent")
+      {
+        Source2 = SourceTemp;
+      }
+      else
+      {
+       Source2 = OnActivaction.SourceReturn(postAction.Source,Faction);
+      }
+      List<GameObject>SourceTemp2 = OnActivaction.SelectorInterpreters(Source2,postAction.PredicateParam,postAction.Single,postAction.Signe,postAction.PredicateType);
+    } 
   }
 
   public static void NodeDebug(Node node)

@@ -110,7 +110,6 @@ public class Token
       ContextProp,
       ContextPseudoMethod,
       ContextMethod,
-      ContextPropBoard,
       ContextTrigger,
       TargetProps,
     }

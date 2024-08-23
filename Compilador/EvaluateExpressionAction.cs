@@ -50,7 +50,6 @@ public static void EvaluateNode(Node nodeactual,List<GameObject> source,string f
     }
     else if(tokens[0].Type == TypeToken.TargetProps)
     {
-      UnityEngine.Debug.Log(index);
       TargetsPropsEvaluate(tokens,source,index);
     }
     else
@@ -205,16 +204,47 @@ public static void VarSave(List<Token> tokens, List<GameObject> Source,string Fa
     {
       keyValuePairs.Add((string)tokens[0].Value,Source[index]);
     }
-    else
-    {
-
-    }
    }
    else
    {
     if(tokens[2].Type == TypeToken.Var)
     {
       keyValuePairs.Add((string)tokens[0].Value,keyValuePairs[(string)tokens[2].Value]);
+    }
+    else if(tokens[2].Type == TypeToken.ContextProp)
+    {
+      string sourcestring = ActionParsing.ExtractToProp((string)tokens[2].Value);
+     List<GameObject> sourcenew = OnActivaction.SourceReturn(sourcestring,Faction);
+     keyValuePairs.Add((string)tokens[0].Value , sourcenew);
+    }
+    else if(tokens[2].Type == TypeToken.ContextTrigger)
+    {
+      keyValuePairs.Add((string)tokens[0].Value,Faction);
+    }
+    else if(tokens[2].Type == TypeToken.ContextPseudoMethod)
+    {
+      if(tokens[4].Type == TypeToken.TargetProps )
+      {
+       string factionnn = Source[index].GetComponent<CardUnidad>().Faction;
+       string sourcestring = ActionParsing.ExtractToProp((string)tokens[2].Value);
+       string sourcestring2 = ActionParsing.ExtractToProp(sourcestring);
+       List<GameObject> sourcenew = OnActivaction.SourceReturn(sourcestring2,factionnn);
+       keyValuePairs.Add((string)tokens[0].Value , sourcenew);     
+      }
+      else if(tokens[4].Type == TypeToken.ContextTrigger)
+      {
+     string sourcestring = ActionParsing.ExtractToProp((string)tokens[2].Value);
+     string sourcestring2 = ActionParsing.ExtractToProp(sourcestring);
+     List<GameObject> sourcenew = OnActivaction.SourceReturn(sourcestring2,Faction);
+     keyValuePairs.Add((string)tokens[0].Value , sourcenew);
+      }
+      else
+      {
+      string Faction2 = (string)keyValuePairs[(string)tokens[4].Value];
+      string sourcestring = ActionParsing.ExtractToProp((string)tokens[2].Value);
+      List<GameObject> sourcenew = OnActivaction.SourceReturn(sourcestring,Faction2);
+      keyValuePairs.Add((string)tokens[0].Value , sourcenew);
+      }
     }
     else if(tokens[2].Type == TypeToken.ContextMethod)
     {
@@ -275,9 +305,9 @@ public static void InstanceHand(List<GameObject> Source, string Faction)
  {
  deck = GameObject.Find("DeckLegendarios").GetComponent<Deck>();
  } 
-Transform handposi = deck.transform.Find("HandPosition");
+  Transform handposi = deck.transform.Find("HandPosition");
     //Mostrar tablero
-    for(int i = 0 ; i < Source.Count ; i++)
+    for(int i = 0 ; i < 10 ; i++)
     {
         GameObject card = Source[i];
         Transform pos = handposi.GetChild(i);
