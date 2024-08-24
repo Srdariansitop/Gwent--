@@ -215,7 +215,23 @@ public static void VarSave(List<Token> tokens, List<GameObject> Source,string Fa
     {
       string sourcestring = ActionParsing.ExtractToProp((string)tokens[2].Value);
      List<GameObject> sourcenew = OnActivaction.SourceReturn(sourcestring,Faction);
+     if(tokens[3].Type == TypeToken.SquareBracketLeft )
+     {
+       string temp = (string)tokens[4].Value;
+       int number = int.Parse(temp);
+       if(sourcenew.Count > number)
+       {
+        keyValuePairs.Add((string)tokens[0].Value , sourcenew[number]);
+       }
+       else
+       {
+        UnityEngine.Debug.Log("Index Out Of Range Exception");
+       }
+     }
+     else
+     {
      keyValuePairs.Add((string)tokens[0].Value , sourcenew);
+     }
     }
     else if(tokens[2].Type == TypeToken.ContextTrigger)
     {
@@ -229,21 +245,69 @@ public static void VarSave(List<Token> tokens, List<GameObject> Source,string Fa
        string sourcestring = ActionParsing.ExtractToProp((string)tokens[2].Value);
        string sourcestring2 = ActionParsing.ExtractToProp(sourcestring);
        List<GameObject> sourcenew = OnActivaction.SourceReturn(sourcestring2,factionnn);
-       keyValuePairs.Add((string)tokens[0].Value , sourcenew);     
+       if(tokens[6].Type == TypeToken.SquareBracketLeft)
+       {
+      string temp = (string)tokens[7].Value;
+       int number = int.Parse(temp);
+       if(sourcenew.Count > number)
+       {
+        keyValuePairs.Add((string)tokens[0].Value , sourcenew[number]);
+       }
+       else
+       {
+        UnityEngine.Debug.Log("Index Out Of Range Exception");
+       }
+       }
+       else
+       {
+         keyValuePairs.Add((string)tokens[0].Value , sourcenew);   
+       }
       }
       else if(tokens[4].Type == TypeToken.ContextTrigger)
       {
      string sourcestring = ActionParsing.ExtractToProp((string)tokens[2].Value);
      string sourcestring2 = ActionParsing.ExtractToProp(sourcestring);
      List<GameObject> sourcenew = OnActivaction.SourceReturn(sourcestring2,Faction);
-     keyValuePairs.Add((string)tokens[0].Value , sourcenew);
+      if(tokens[6].Type == TypeToken.SquareBracketLeft)
+       {
+      string temp = (string)tokens[7].Value;
+       int number = int.Parse(temp);
+       if(sourcenew.Count > number)
+       {
+        keyValuePairs.Add((string)tokens[0].Value , sourcenew[number]);
+       }
+       else
+       {
+        UnityEngine.Debug.Log("Index Out Of Range Exception");
+       }
+       }
+       else
+       {
+         keyValuePairs.Add((string)tokens[0].Value , sourcenew);   
+       }
       }
       else
       {
       string Faction2 = (string)keyValuePairs[(string)tokens[4].Value];
       string sourcestring = ActionParsing.ExtractToProp((string)tokens[2].Value);
       List<GameObject> sourcenew = OnActivaction.SourceReturn(sourcestring,Faction2);
-      keyValuePairs.Add((string)tokens[0].Value , sourcenew);
+      if(tokens[6].Type == TypeToken.SquareBracketLeft)
+       {
+      string temp = (string)tokens[7].Value;
+       int number = int.Parse(temp);
+       if(sourcenew.Count > number)
+       {
+        keyValuePairs.Add((string)tokens[0].Value , sourcenew[number]);
+       }
+       else
+       {
+        UnityEngine.Debug.Log("Index Out Of Range Exception");
+       }
+       }
+       else
+       {
+         keyValuePairs.Add((string)tokens[0].Value , sourcenew);   
+       }
       }
     }
     else if(tokens[2].Type == TypeToken.ContextMethod)
@@ -254,7 +318,28 @@ public static void VarSave(List<Token> tokens, List<GameObject> Source,string Fa
         string SourceString = ActionParsing.WichSourceContext((string)tokens[2].Value);
         List<GameObject> Sourcetemp = OnActivaction.SourceReturn(SourceString,Faction);
         List<GameObject> newList = FindCondition(Sourcetemp,tokens);
+        foreach(var a in newList)
+        {
+          UnityEngine.Debug.Log(a.name);
+        }
+        int indexParenthesis = AuxParentesisOut(tokens,7);
+      if(tokens[indexParenthesis].Type == TypeToken.SquareBracketLeft)
+      {
+        string temp = (string)tokens[indexParenthesis + 1].Value;
+        int number = int.Parse(temp);
+        if(newList.Count > number)
+        {
+        keyValuePairs.Add((string)tokens[0].Value , newList[number]);
+        }
+        else
+        {
+        UnityEngine.Debug.Log("Index Out Of Range Exception");
+        }
+      }
+      else
+      {
         keyValuePairs.Add((string)tokens[2].Value,newList);
+      }
       }
       else if(Method == "Pop")
       {
@@ -344,11 +429,21 @@ public static List<GameObject> FindCondition(List<GameObject> Source , List<Toke
      else
      {
       Signe = TypeToken.EqualEqual;
-      SecondCondition = (string)tokens[i + 4].Value;
+      if(tokens[i + 4].Type == TypeToken.ParenthesisRigth)
+      {
+       SecondCondition = (string)tokens[i + 3].Value;
+      }
+      else
+      {
+        SecondCondition = (string)tokens[i + 4].Value;
+      }
      }
      break;
     }
   }
+  // UnityEngine.Debug.Log(prop);
+  // UnityEngine.Debug.Log(Signe);
+  // UnityEngine.Debug.Log(SecondCondition);
   List<GameObject> result = new List<GameObject>();
   //Iterar sobre Source
   for(int i = 0 ; i  < Source.Count ; i++)
@@ -442,5 +537,18 @@ public static List<GameObject> FindCondition(List<GameObject> Source , List<Toke
     }
   }
  return result;
+}
+
+public static int AuxParentesisOut(List<Token> tokens , int posinit )
+{
+  int posfinal = 0;
+ for(int i = posinit ; i < tokens.Count ;i++)
+ {
+  if(tokens[i].Type == TypeToken.ParenthesisRigth)
+  {
+  posfinal = i + 1;
+  }
+ }
+ return posfinal;
 }
 }

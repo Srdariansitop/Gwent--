@@ -13,6 +13,7 @@ public class PostAction
   public TypeToken Signe;
   public string PredicateType;
 
+
     public static void PostActionParsing(List<Token> tokens , int posinit , int posfinal)
   {
     if(posinit >= posfinal)

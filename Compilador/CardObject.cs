@@ -333,7 +333,14 @@ public bool Content(string RangeString)
        Source2 = OnActivaction.SourceReturn(postAction.Source,Faction);
       }
       List<GameObject>SourceTemp2 = OnActivaction.SelectorInterpreters(Source2,postAction.PredicateParam,postAction.Single,postAction.Signe,postAction.PredicateType);
-    } 
+      Effect vareffect = Expression.EffectResult(postAction.Type);
+      Lexer lexerpostaction = new Lexer();
+      List<Token> tokens2 = lexerpostaction.Tokenizar(vareffect.GetComponent<Effect>().Acction);
+      Node Parent = new Node(new List<Node>(), "Parent");
+      Effect.TreeAction(Parent,tokens2,0,tokens2.Count);
+      EvaluateExpressionAction.EvaluateNode(Parent,SourceTemp,Faction,0);
+      
+     } 
   }
 
   public static void NodeDebug(Node node)

@@ -29,6 +29,37 @@ public class ActionParsing
             {
               ParsingActionEffects(tokens,pos+11,posfinal);
             }
+            else if(tokens[pos + 10].Type == TypeToken.SquareBracketLeft)
+            {
+               if(tokens[pos + 11].Type == TypeToken.Number)
+               {
+                 if(tokens[pos + 12].Type == TypeToken.SquareBracketRigth)
+                 {
+                   if(tokens[pos + 13].Type == TypeToken.PuntComa)
+                   {
+                     ParsingActionEffects(tokens,pos+14,posfinal);
+                   }
+                   else
+                   {
+                  SemanticAnalyzer.SemancticError = true;
+                  Controller.ErrorExpected(';');
+                  return;
+                   }
+                 }
+                 else 
+                 {
+                  SemanticAnalyzer.SemancticError = true;
+                  Controller.ErrorExpected(']');
+                  return;
+                 }
+               }
+               else
+               {
+               SemanticAnalyzer.SemancticError = true;
+               Controller.ExpressionInvalidate(tokens[11]);
+               return;
+               }
+            }
             else
             {
             SemanticAnalyzer.SemancticError = true;
@@ -212,7 +243,7 @@ public class ActionParsing
    {
       if(tokens[pos + 1].Type == TypeToken.Equal)
       {
-        if(tokens[pos + 2].Type == TypeToken.target || tokens[pos + 2].Type == TypeToken.Number || tokens[pos + 2].Type == TypeToken.Bool || tokens[pos + 2].Type == TypeToken.String || tokens[pos + 2].Type == TypeToken.ContextProp || tokens[pos + 2].Type == TypeToken.TargetProps ||tokens[pos + 2].Type == TypeToken.ContextTrigger)
+        if(tokens[pos + 2].Type == TypeToken.target || tokens[pos + 2].Type == TypeToken.Number || tokens[pos + 2].Type == TypeToken.Bool || tokens[pos + 2].Type == TypeToken.String || tokens[pos + 2].Type == TypeToken.TargetProps ||tokens[pos + 2].Type == TypeToken.ContextTrigger)
         {
             if(tokens[pos + 3].Type == TypeToken.PuntComa)
             {
@@ -224,6 +255,51 @@ public class ActionParsing
               Controller.ErrorExpected(';');
               return;
             }
+        }
+        else if(tokens[pos + 2].Type == TypeToken.ContextProp )
+        {
+          if(tokens[pos + 3].Type == TypeToken.PuntComa)
+            {
+               ParsingActionEffects(tokens,pos + 4,posfinal);
+            }
+          else if(tokens[pos + 3].Type == TypeToken.SquareBracketLeft)
+            {
+               if(tokens[pos + 4].Type == TypeToken.Number)
+               {
+                 if(tokens[pos + 5].Type == TypeToken.SquareBracketRigth)
+                 {
+                   if(tokens[pos + 6].Type == TypeToken.PuntComa)
+                   {
+                     ParsingActionEffects(tokens,pos+7,posfinal);
+                   }
+                   else
+                   {
+                  SemanticAnalyzer.SemancticError = true;
+                  Controller.ErrorExpected(';');
+                  return;
+                   }
+                 }
+                 else 
+                 {
+                  SemanticAnalyzer.SemancticError = true;
+                  Controller.ErrorExpected(']');
+                  return;
+                 }
+               }
+               else
+               {
+               SemanticAnalyzer.SemancticError = true;
+               Controller.ExpressionInvalidate(tokens[4]);
+               return;
+               }
+            }
+            else
+            {
+            SemanticAnalyzer.SemancticError = true;
+            Controller.ErrorExpected(';');
+            return;
+            }
+          
         }
         else if(tokens[pos + 2].Type == TypeToken.Var)
         {
@@ -259,6 +335,38 @@ public class ActionParsing
                {
                  ParsingActionEffects(tokens,pos + 7, posfinal);
                }
+               else if(tokens[pos + 6].Type == TypeToken.SquareBracketLeft)
+               {
+               if(tokens[pos + 7].Type == TypeToken.Number)
+               {
+                 if(tokens[pos + 8].Type == TypeToken.SquareBracketRigth)
+                 {
+                   if(tokens[pos + 9].Type == TypeToken.PuntComa)
+                   {
+                     
+                     ParsingActionEffects(tokens,pos+10,posfinal);
+                   }
+                   else
+                   {
+                  SemanticAnalyzer.SemancticError = true;
+                  Controller.ErrorExpected(';');
+                  return;
+                   }
+                 }
+                 else 
+                 {
+                  SemanticAnalyzer.SemancticError = true;
+                  Controller.ErrorExpected(']');
+                  return;
+                 }
+               }
+               else
+               {
+               SemanticAnalyzer.SemancticError = true;
+               Controller.ExpressionInvalidate(tokens[7]);
+               return;
+               }
+            }
                else
                {
                SemanticAnalyzer.SemancticError = true;
@@ -803,6 +911,11 @@ public static bool TypeTokenCard(List<Token> tokens , string namevar,int pos)
       {
         return true;
       }
+      else if(tokens[i + 2].Type == TypeToken.ContextPseudoMethod && tokens[i + 6].Type == TypeToken.SquareBracketLeft || tokens[i + 2].Type == TypeToken.ContextProp && tokens[i + 3].Type == TypeToken.SquareBracketLeft)
+      {
+        return true;
+      }
+      
    }
  }
  return false;
