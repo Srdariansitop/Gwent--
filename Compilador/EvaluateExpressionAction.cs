@@ -10,6 +10,7 @@ using System.Diagnostics;
 using UnityEngine.AI;
 using Unity.VisualScripting.ReorderableList.Element_Adder_Menu;
 using UnityEditor.Search;
+using Unity.Collections.LowLevel.Unsafe;
 public class EvaluateExpressionAction : MonoBehaviour
 {
 public static Dictionary<string,object> keyValuePairs = new Dictionary<string, object>();
@@ -215,7 +216,7 @@ public static void VarSave(List<Token> tokens, List<GameObject> Source,string Fa
     {
       string sourcestring = ActionParsing.ExtractToProp((string)tokens[2].Value);
      List<GameObject> sourcenew = OnActivaction.SourceReturn(sourcestring,Faction);
-     if(tokens[3].Type == TypeToken.SquareBracketLeft )
+     if(tokens.Count > 3  && tokens[3].Type == TypeToken.SquareBracketLeft )
      {
        string temp = (string)tokens[4].Value;
        int number = int.Parse(temp);
@@ -245,7 +246,7 @@ public static void VarSave(List<Token> tokens, List<GameObject> Source,string Fa
        string sourcestring = ActionParsing.ExtractToProp((string)tokens[2].Value);
        string sourcestring2 = ActionParsing.ExtractToProp(sourcestring);
        List<GameObject> sourcenew = OnActivaction.SourceReturn(sourcestring2,factionnn);
-       if(tokens[6].Type == TypeToken.SquareBracketLeft)
+       if(tokens.Count > 6 && tokens[6].Type == TypeToken.SquareBracketLeft)
        {
       string temp = (string)tokens[7].Value;
        int number = int.Parse(temp);
@@ -268,7 +269,7 @@ public static void VarSave(List<Token> tokens, List<GameObject> Source,string Fa
      string sourcestring = ActionParsing.ExtractToProp((string)tokens[2].Value);
      string sourcestring2 = ActionParsing.ExtractToProp(sourcestring);
      List<GameObject> sourcenew = OnActivaction.SourceReturn(sourcestring2,Faction);
-      if(tokens[6].Type == TypeToken.SquareBracketLeft)
+      if(tokens.Count > 6 && tokens[6].Type == TypeToken.SquareBracketLeft)
        {
       string temp = (string)tokens[7].Value;
        int number = int.Parse(temp);
@@ -291,7 +292,7 @@ public static void VarSave(List<Token> tokens, List<GameObject> Source,string Fa
       string Faction2 = (string)keyValuePairs[(string)tokens[4].Value];
       string sourcestring = ActionParsing.ExtractToProp((string)tokens[2].Value);
       List<GameObject> sourcenew = OnActivaction.SourceReturn(sourcestring,Faction2);
-      if(tokens[6].Type == TypeToken.SquareBracketLeft)
+      if(tokens.Count > 6 && tokens[6].Type == TypeToken.SquareBracketLeft)
        {
       string temp = (string)tokens[7].Value;
        int number = int.Parse(temp);
@@ -318,12 +319,8 @@ public static void VarSave(List<Token> tokens, List<GameObject> Source,string Fa
         string SourceString = ActionParsing.WichSourceContext((string)tokens[2].Value);
         List<GameObject> Sourcetemp = OnActivaction.SourceReturn(SourceString,Faction);
         List<GameObject> newList = FindCondition(Sourcetemp,tokens);
-        foreach(var a in newList)
-        {
-          UnityEngine.Debug.Log(a.name);
-        }
         int indexParenthesis = AuxParentesisOut(tokens,7);
-      if(tokens[indexParenthesis].Type == TypeToken.SquareBracketLeft)
+      if(tokens.Count > indexParenthesis &&tokens[indexParenthesis].Type == TypeToken.SquareBracketLeft)
       {
         string temp = (string)tokens[indexParenthesis + 1].Value;
         int number = int.Parse(temp);
@@ -366,7 +363,12 @@ public static void VarSave(List<Token> tokens, List<GameObject> Source,string Fa
 
 public static void ModVar(string name , TypeToken operation)
 {
-int number = int.Parse((string)keyValuePairs[name]);
+int number;
+try
+{
+number = int.Parse((string)keyValuePairs[name]);
+}
+catch{number = (int)keyValuePairs[name];}
 if (operation == TypeToken.SumSum)
 {
   number += 1;
@@ -415,16 +417,8 @@ public static List<GameObject> FindCondition(List<GameObject> Source , List<Toke
      prop = (string)tokens[i + 1].Value;
      if(prop == "Power")
      {
-      if(tokens[i + 2].Type == TypeToken.Equal)
-      {
-      Signe = TypeToken.EqualEqual;
-      SecondCondition = (string)tokens[i + 4].Value;
-      }
-      else
-      {
       Signe = tokens[i + 2].Type;
       SecondCondition = (string)tokens[i + 3].Value;
-      }
      }
      else
      {
@@ -441,9 +435,9 @@ public static List<GameObject> FindCondition(List<GameObject> Source , List<Toke
      break;
     }
   }
-  // UnityEngine.Debug.Log(prop);
-  // UnityEngine.Debug.Log(Signe);
-  // UnityEngine.Debug.Log(SecondCondition);
+   UnityEngine.Debug.Log(prop);
+   UnityEngine.Debug.Log(Signe);
+   UnityEngine.Debug.Log(SecondCondition);
   List<GameObject> result = new List<GameObject>();
   //Iterar sobre Source
   for(int i = 0 ; i  < Source.Count ; i++)

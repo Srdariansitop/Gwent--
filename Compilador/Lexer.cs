@@ -69,7 +69,7 @@ public class Lexer
                         i++;
                         continue;
                      }
-                     if(text[i + 1] < text.Length && text[i + 1] == '=')
+                     if(text[i + 1] == '=')
                      {
                         result.Add(new Token("==",TypeToken.EqualEqual));
                         i++;
@@ -80,13 +80,13 @@ public class Lexer
                   }
                 if(text[i] == '+')
                   {
-                     if(text[i + 1] < text.Length && text[i + 1] == '=')
+                     if(text[i + 1] == '=')
                      {
                         result.Add(new Token("+=",TypeToken.EqualSum));
                         i++;
                         continue;
                      }
-                     if(text[i + 1] < text.Length && text[i + 1] == '+')
+                     if(text[i + 1] == '+')
                      {
                         result.Add(new Token("++",TypeToken.SumSum));
                         i++;
@@ -97,13 +97,13 @@ public class Lexer
                   }
                 if(text[i] == '-')
                   {
-                     if(text[i + 1] < text.Length && text[i + 1] == '=')
+                     if(text[i + 1] == '=')
                      {
                         result.Add(new Token("-=",TypeToken.EqualRest));
                         i++;
                         continue;
                      }
-                      if(text[i + 1] < text.Length && text[i + 1] == '-')
+                      if(text[i + 1] == '-')
                      {
                         result.Add(new Token("--",TypeToken.RestRest));
                         i++;

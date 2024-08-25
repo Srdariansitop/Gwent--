@@ -497,7 +497,7 @@ public class ActionParsing
       {
         int posfinalaux = pos + 2;
         SemanticAnalyzer.ExitParenthesis(ref posfinalaux , tokens , 0);
-        ParsingExpressionBoolean(tokens,pos + 2,posfinalaux - 1);
+        ParsingExpressionBoolean(tokens,pos + 2);
         ParsingActionEffects(tokens,posfinalaux,posfinal);
       }
       else
@@ -519,143 +519,45 @@ public class ActionParsing
    ///<summary>
    ///Este metodo es el encargado de analizar la expresion Booleana dentro del While osea un predicate
    ///</summary>
- public static void ParsingExpressionBoolean(List<Token> tokens , int pos , int posfinal)
+ public static void ParsingExpressionBoolean(List<Token> tokens , int pos )
  {
-   if(pos == posfinal)
+   if(tokens[pos].Type == TypeToken.Number || tokens[pos].Type == TypeToken.Var && (CompareTypeOfParams(tokens[pos],TypeToken.Number) || CompareType(tokens[pos],tokens,TypeToken.Number ,pos)))
    {
-      return;
-   }
-   if(tokens[pos].Type == TypeToken.Number)
-   {
-     if(tokens[pos + 1].Type == TypeToken.EqualEqual || tokens[pos + 1].Type == TypeToken.GreaterEqualThan||tokens[pos + 1].Type == TypeToken.GreaterThan || tokens[pos + 1].Type == TypeToken.LessThan || tokens[pos + 1].Type == TypeToken.SmallerThan  )
-     {
-        if(tokens[pos + 2].Type == TypeToken.Number || tokens[pos + 2].Type == TypeToken.Var && (CompareType(tokens[pos + 2],tokens,TypeToken.Number,pos) || CompareTypeOfParams(tokens[pos + 2],TypeToken.Number) ))
-        {
-          ParsingExpressionBoolean(tokens,pos + 3,posfinal);
-        }
-        else 
-        {
-            Controller.ErrorOfType(tokens[pos],tokens[pos+2]);
-            SemanticAnalyzer.SemancticError = true;
-            return;
-        }
-     }
-     else if(tokens[pos + 1].Type == TypeToken.SumSum || tokens[pos + 1].Type == TypeToken.RestRest)
-     {
-      if(tokens[pos + 2].Type == TypeToken.EqualEqual || tokens[pos + 2].Type == TypeToken.GreaterEqualThan||tokens[pos + 2].Type == TypeToken.GreaterThan || tokens[pos + 2].Type == TypeToken.LessThan || tokens[pos + 2].Type == TypeToken.SmallerThan  )
+      if(tokens[pos + 1].Type == TypeToken.RestRest || tokens[pos + 1].Type == TypeToken.SumSum)
       {
-        if(tokens[pos + 3].Type == TypeToken.Number || tokens[pos + 3].Type == TypeToken.Var && (CompareType(tokens[pos + 3],tokens,TypeToken.Number,pos) || CompareTypeOfParams(tokens[pos + 3],TypeToken.Number) ))
-        {
-          ParsingExpressionBoolean(tokens,pos + 4,posfinal);
-        }
-        else 
-        {
-            Controller.ErrorOfType(tokens[pos],tokens[pos+3]);
+         if(tokens[pos + 2].Type == TypeToken.GreaterEqualThan || tokens[pos + 2].Type == TypeToken.GreaterThan || tokens[pos + 2].Type == TypeToken.EqualEqual || tokens[pos + 2].Type == TypeToken.LessThan || tokens[pos + 2].Type == TypeToken.SmallerThan )
+         {
+            if(tokens[pos + 3].Type == TypeToken.Number || tokens[pos + 3].Type == TypeToken.Var && (CompareTypeOfParams(tokens[pos + 3],TypeToken.Number) || CompareType(tokens[pos + 3],tokens,TypeToken.Number ,pos + 3)))
+            {
+               return;
+            }
+            else
+            {
             SemanticAnalyzer.SemancticError = true;
+            Debug.Log("The program expects a variable of numerical type to compare in the while");
             return;
-        }
+            }
+         }
+         else
+         {
+         SemanticAnalyzer.SemancticError = true;
+         Debug.Log(" The program waits for a comparasion token in the while ");
+         return;   
+         }
       }
       else
       {
-         SemanticAnalyzer.SemancticError = true;
-         Controller.ErrorExpected('=');
-         return;
-      }
-     }
-     else
-     {
-         SemanticAnalyzer.SemancticError = true;
-         Controller.ExpressionInvalidate(tokens[pos + 1]);
-         return;
-     }
-   }
-   else if(tokens[pos].Type == TypeToken.Bool || tokens[pos].Type == TypeToken.String)
-   {
-      if(tokens[pos + 1].Type == TypeToken.EqualEqual)
-      {
-         if(tokens[pos + 2].Type == tokens[pos].Type || tokens[pos + 2].Type == TypeToken.Var && (CompareType(tokens[pos + 2],tokens,tokens[pos].Type,pos) || CompareTypeOfParams(tokens[pos + 2],tokens[pos].Type) ))
-         {
-            ParsingExpressionBoolean(tokens,pos + 3,posfinal);
-         }
-         else 
-         {
-            Controller.ErrorOfType(tokens[pos],tokens[pos+2]);
-            SemanticAnalyzer.SemancticError = true;
-            return;
-         }
-      }
-      else 
-      {
-         SemanticAnalyzer.SemancticError = true;
-         Controller.ErrorExpected('=');
-         return;
-      }
-   }
-   else if(tokens[pos].Type == TypeToken.Var)
-   {
-     TypeToken typeToken = TypeofVariable(tokens[pos] , tokens , pos);
-     if(typeToken == TypeToken.Action )
-     {
-       SemanticAnalyzer.SemancticError = true;
-       Debug.Log("Variable " + (string)tokens[pos].Value + " has not been declared correctly"); 
-       return;
-     }
-     else if(typeToken == TypeToken.Number && (tokens[pos + 1].Type == TypeToken.EqualEqual || tokens[pos + 1].Type == TypeToken.GreaterEqualThan||tokens[pos + 1].Type == TypeToken.GreaterThan || tokens[pos + 1].Type == TypeToken.LessThan || tokens[pos + 1].Type == TypeToken.SmallerThan ))
-     {
-      if(tokens[pos + 2 ].Type == TypeToken.Number || tokens[pos + 2].Type == TypeToken.Var && TypeofVariable(tokens[pos + 2] , tokens , pos + 2) == TypeToken.Number)
-            {
-             ParsingExpressionBoolean(tokens,pos + 3 , posfinal); 
-            }
-            else 
-            {
-            Controller.ErrorOfType(tokens[pos],tokens[pos+2]);
-            SemanticAnalyzer.SemancticError = true;
-            return;
-            }
-     }
-     else if(typeToken == TypeToken.Number && (tokens[pos + 1].Type == TypeToken.SumSum || tokens[pos + 1].Type == TypeToken.RestRest) )
-     {
-         if(tokens[pos + 2].Type == TypeToken.EqualEqual || tokens[pos + 2].Type == TypeToken.GreaterEqualThan||tokens[pos + 2].Type == TypeToken.GreaterThan || tokens[pos + 2].Type == TypeToken.LessThan || tokens[pos + 2].Type == TypeToken.SmallerThan)
-         {
-            if(tokens[pos + 3 ].Type == TypeToken.Number || tokens[pos + 3].Type == TypeToken.Var && TypeofVariable(tokens[pos + 3] , tokens , pos + 3) == TypeToken.Number)
-            {
-             ParsingExpressionBoolean(tokens,pos + 4 , posfinal); 
-            }
-            else 
-            {
-            Controller.ErrorOfType(tokens[pos],tokens[pos+3]);
-            SemanticAnalyzer.SemancticError = true;
-            return;
-            }
-         }
-     }
-     else if((typeToken == TypeToken.String || typeToken == TypeToken.Bool)&& tokens[pos + 1].Type == TypeToken.EqualEqual)
-     {
-         if(tokens[pos + 2 ].Type == typeToken || tokens[pos + 2].Type == TypeToken.Var && TypeofVariable(tokens[pos + 2] , tokens , pos + 2) == typeToken)
-         {
-            ParsingExpressionBoolean(tokens,pos + 3 , posfinal); 
-         }
-         else 
-         {
-            Controller.ErrorOfType(tokens[pos],tokens[pos+2]);
-            SemanticAnalyzer.SemancticError = true;
-            return;
-         }
-     }
-     else 
-     {
       SemanticAnalyzer.SemancticError = true;
-      Controller.ExpressionInvalidate(tokens[pos + 1]);
-      return;
-     }
+      Debug.Log("To iterate in a while you need to Increase or Decrease your numerical variable");
+      return;   
+      }
    }
    else
    {
-      SemanticAnalyzer.SemancticError = true;
-      Controller.ExpressionInvalidate(tokens[pos]);
-      return;
+   SemanticAnalyzer.SemancticError = true;
+   Debug.Log("The program expects a variable of numerical type to compare in the while");
+   return;         
    }
-
  }
 
    ///<summary>

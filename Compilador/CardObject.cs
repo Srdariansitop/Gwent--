@@ -321,7 +321,7 @@ public bool Content(string RangeString)
       Param.InstanceParamofCard(onActivaction.effects[i].GetComponent<Effect>().Params);
       EvaluateExpressionAction.EvaluateNode(Parent,SourceTemp,Faction,0);
     }
-    if(postAction != null)
+    if(postAction.Signe != TypeToken.Effect)
     {
       List<GameObject> Source2 ;
       if(postAction.Source == "Parent")
