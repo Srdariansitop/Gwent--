@@ -67,7 +67,8 @@ public class Effect : MonoBehaviour
                     int posaux = i + 2;
                     SemanticAnalyzer.ExitParenthesis(ref posaux, tokens, 0);
                     List<Token> newtokens = ListComplete(tokens, posfinal-1, posaux);
-                    Node node = new Node(new List<Node>(), "While");
+                    While value = While.WhileObject(tokens, i+ 2);
+                    Node node = new Node(new List<Node>(), value);
                     parent.Children.Add(node);
                     TreeAction(node, newtokens, 0, newtokens.Count);
                     break;
@@ -105,5 +106,5 @@ public class Effect : MonoBehaviour
             }
             return result;
         }
-
+   
 }

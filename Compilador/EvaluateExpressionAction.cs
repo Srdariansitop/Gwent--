@@ -11,6 +11,7 @@ using UnityEngine.AI;
 using Unity.VisualScripting.ReorderableList.Element_Adder_Menu;
 using UnityEditor.Search;
 using Unity.Collections.LowLevel.Unsafe;
+using System.Threading.Tasks;
 public class EvaluateExpressionAction : MonoBehaviour
 {
 public static Dictionary<string,object> keyValuePairs = new Dictionary<string, object>();
@@ -21,14 +22,14 @@ public static Dictionary<string,object> keyValuePairs = new Dictionary<string, o
 
 public static void EvaluateNode(Node nodeactual,List<GameObject> source,string faction,int index)
 {
-  if (NotTokenList(nodeactual) && (string)nodeactual.Value == "Parent")
+  if (!IsWhile(nodeactual) && NotTokenList(nodeactual) && (string)nodeactual.Value == "Parent")
   {
     foreach(var a in nodeactual.Children)
     {
       EvaluateNode(a,source,faction,0);
     }
   }
-  else if (NotTokenList(nodeactual) && (string)nodeactual.Value == "For")
+  else if (!IsWhile(nodeactual) && NotTokenList(nodeactual) && (string)nodeactual.Value == "For")
   {
     for(int i = 0; i < source.Count; i++)
     {
@@ -38,9 +39,92 @@ public static void EvaluateNode(Node nodeactual,List<GameObject> source,string f
       }
     }
   }
-  else if (NotTokenList(nodeactual) && (string)nodeactual.Value == "While")
+  else if (IsWhile(nodeactual))
   {
-
+    While result = (While)nodeactual.Value;
+    int left = ValueOfWhile(result.Left);
+    int rigth = ValueOfWhile(result.Rigth);
+    if(result.Signe == TypeToken.EqualEqual)
+    {
+      while(left == rigth)
+      {
+        foreach(var a in nodeactual.Children)
+        {
+          EvaluateNode(a,source,faction,index);
+        }
+        if(result.Increase == true)
+        {
+          left++;
+        }
+        else { left--; }
+      }
+    }
+    else if(result.Signe == TypeToken.LessThan)
+    {
+      while (left <= rigth)
+      {
+        foreach (var a in nodeactual.Children)
+        {
+          EvaluateNode(a,source,faction,index);
+        }
+        if (result.Increase == true)
+        {
+        left++;
+        }
+        else { left--; }
+      }
+    }
+    else if(result.Signe == TypeToken.SmallerThan)
+    {
+      while (left < rigth)
+      {
+       // UnityEngine.Debug.Log("El valor izquierdo es  :" + left);
+       // UnityEngine.Debug.Log("El valor derecho es  :" + rigth);
+        foreach (var a in nodeactual.Children)
+        {
+          EvaluateNode(a,source,faction,index);
+          // foreach(var x in keyValuePairs)
+          // {
+          //   UnityEngine.Debug.Log("El valor " + x.Key    + " su valor " + x.Value);
+          // }
+        }
+        if (result.Increase == true)
+        {
+        left++;
+        }
+        else { left--; }
+      }
+    }
+    else if(result.Signe == TypeToken.GreaterEqualThan)
+    {
+      while (left >= rigth)
+      {
+        foreach (var a in nodeactual.Children)
+        {
+          EvaluateNode(a,source,faction,index);
+        }
+        if (result.Increase == true)
+        {
+          left++;
+        }
+        else { left--; }
+      }
+    }
+    else
+    {
+      while (left > rigth)
+      {
+        foreach (var a in nodeactual.Children)
+        {
+          EvaluateNode(a,source,faction,index);
+        }
+        if (result.Increase == true)
+        {
+          left++;
+        }
+        else { left--; }
+      }
+    }
   }
   else
   {
@@ -65,7 +149,30 @@ public static void EvaluateNode(Node nodeactual,List<GameObject> source,string f
   try{ string a = (string)node.Value; return true;}
   catch { return false;}   
 }
+public static bool IsWhile(Node node)
+{
+ try
+{
+ While a = (While)node.Value;
+ return true;
+}
+catch { return false; }
+}
 
+public static int ValueOfWhile(string var)
+{
+  int number = 0;
+  try
+  {
+    number = int.Parse(var);
+    return number;
+  }
+  catch
+  {
+    number = int.Parse((string)keyValuePairs[var]);
+    return number;
+  }
+}
 public static void ContextMethodAnalyzer(List<Token> tokens,string Faction,List<GameObject> SourceGlobal , int index)
 {
 string Method = ActionParsing.WhichMethodContext((string)tokens[0].Value);
