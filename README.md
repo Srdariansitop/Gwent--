@@ -39,7 +39,7 @@ Faction = Red
 ```
 >(Todo estos parametros son obligatorios para q el programa puede formar una Carta)
 
-####Opcional :
+#### Opcional :
 + OnActivaction :
 >(Efectos q puedes definir dentro de una partida)
 
