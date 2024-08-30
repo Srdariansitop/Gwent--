@@ -111,3 +111,169 @@ PostAction
 ]
 }
   ```
+
+# Efecto :
+
+- Name : Cualquier string es permitido , siempre entre " " 
+Ejemplo :
+```javascript
+Name = "Draw"
+```
+- Params : Los parametros del efecto , se declara entre llaves y luego ponemos las variables que queremos q sean nuestros parametros , siempre igualados al tipo que queremos q sea la variable :
+Ejemplo : 
+```javascript
+Params
+{
+  amount = Number
+}
+```
+> amount es la variable , y los Tipos permitidos son String , Number , Bool .
+
+- Action
+Es el efecto a ejecutar en si , el siguiete codigo es el permitido :
+
+ - Declaraciones de Ciclos :
+    - For :
+
+ ```javascript
+for Target in Targets
+  {
+   //Cuerpo de la Funcion
+  }
+  ```
+>  Se permite solo iterar sobre los objectivos
+
+   -   While :
+    
+   ```javascript
+      p = 0;
+      while( p++  <  5)
+       //Cuerpo de la funcion
+   ```
+> Iterar sobre una condicion booleana , siempre entre tipos numericos(ya sea entre variables o numeros ) , se acepta comparaciones ( == , < , > , >= , <=)
+
+ ### Extras :
+
+ -  Declaracion de variables :
+ > Se acepta cualquier declaracion de cualquier tipo (String , Bool , Number, Var = Var , Var = Cartas o Listas de Cartas , Propiedades de Cartas)
+
+ Ejemplo :
+   ```javascript
+       i = 0 ;
+  ```
+- Propiedades de Cartas:
+    - target.Power - Modificacion del Poder
+   - target.Owner - Identificador de la Card
+   - target.Faction - Faccion
+   - target.Type - Tipo
+  - target.Name - Nombre
+>(Tenga en cuenta q la modificacion de una carta en estas propiedades pueden verse afectadas en el juego original)
+
+   Ejemplo  :
+   ```javascript
+      target.Power -= 100;
+   ```
+> Se acepta para modificar los operadores ( -= , == , += solo para power , los demas ==) 
+
+ - Declaracion de Listas o Cartas (Indexando) :
+
+   - 1 - La forma mas simple de declararla es como 
+        >context.Hand - La mano del usuario actual
+		 context.Deck - El deck del usuario actual
+	    context.Board - El campo entero
+
+Ejemplo
+  ```javascript
+    var = context.Deck;
+  ```
+
+   -  2 - Atraves del Owner o TriggerPlayer
+   
+      >context.HandOfPlayer - Deck 
+    context.FieldOfPlayer - Campo
+    context.DeckOfPlayer - Deck
+
+       Se declara  :
+   ```javascript
+   lista = context.DeckOfPlayer(target.Owner);
+  ```
+  
+   > Significa el ID del target
+   ```javascript
+    lista = context.DeckOfPlayer(context.TriggerPlayer);
+   ```
+ >Significa el ID del q se desencadeno el efecto
+
+   - 3 -_Indexado en Listas :
+```javascript
+card = context.DeckOfPlayer(context.TriggerPlayer)[1];
+  ```
+ > Exactamente igual con la diferencia de agregar el indice de la carta en la lista
+
+
+ -  Metodos:
+ 
+   - Push : Agregar carta al tope de la lista
+Ejemplo :
+```javascript
+context.Hand.Push(card);
+  ```
+  - SendBottom : Agrega una carta al fondo de la lista
+Ejemplo :
+```javascript
+context.Hand.SendBootom(card);
+  ```
+  - Pop : Quita la carta q esta en el tope y la devuelvo
+Ejemplo :
+```javascript
+topcard = context.Hand.Pop();
+  ```
+  
+  - Add : Agrega una carta a la lista
+Ejemplo :
+```javascript
+context.Hand.Add(card);
+  ```
+
+   - Remove : Quita una carta de la lista 
+Ejemplo :
+```javascript
+context.Hand.Remove(card);
+  ```
+  - Shuffle: Mezcla la lista
+Ejemplo :
+```javascript
+context.Hand.Shuffle();
+  ```
+  
+   - Find : Devuelve una lista dada una condicion
+
+> Aceptamos en el programa comparaciones con las siguientes propiedades de la carta
+
+   -  unit.power - Se aceptan operadores de comparacion(== , < , > , <= ,>=)
+   -  unit.faction - Se acepta solamente como operador de comparacion ==
+   - unit.type -  Se acepta solamente como operador de comparacion ==
+   - unit.range -  Se acepta solamente como operador de comparacion ==
+Ejemplo : 
+```javascript
+var = context.Hand.Find((unit) => unit.Power == 500);
+  ```
+> Todos los ejemplos anteriores solo fue usando a Hand como Fuente pero se aceptan fuentes como Deck.
+
+## Codigo Ejemplo de un efecto completo :
+```javascript
+Effect
+{
+ Name = "Damage"
+Params
+{
+  amount = Number
+}
+Action(Targets,Context)=>
+{
+i = 0;
+while(i++ < amount)
+target.Power -= 100;
+} 
+}
+  ```
