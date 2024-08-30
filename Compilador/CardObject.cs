@@ -317,7 +317,7 @@ public bool Content(string RangeString)
       List<Token> tokens =  lexer.Tokenizar(onActivaction.effects[i].GetComponent<Effect>().Acction);
       Node Parent = new Node(new List<Node>(),"Parent");
       Effect.TreeAction(Parent,tokens,0,tokens.Count);
-      //NodeDebug(Parent);
+      NodeDebug(Parent);
       Param.InstanceParamofCard(onActivaction.effects[i].GetComponent<Effect>().Params);
       EvaluateExpressionAction.EvaluateNode(Parent,SourceTemp,Faction,0);
     }

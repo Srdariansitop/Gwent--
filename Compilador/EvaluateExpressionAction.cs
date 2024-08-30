@@ -78,15 +78,15 @@ public static void EvaluateNode(Node nodeactual,List<GameObject> source,string f
     {
       while (left < rigth)
       {
-       // UnityEngine.Debug.Log("El valor izquierdo es  :" + left);
-       // UnityEngine.Debug.Log("El valor derecho es  :" + rigth);
+      // UnityEngine.Debug.Log("El valor izquierdo es  :" + left);
+      // UnityEngine.Debug.Log("El valor derecho es  :" + rigth);
         foreach (var a in nodeactual.Children)
         {
           EvaluateNode(a,source,faction,index);
-          // foreach(var x in keyValuePairs)
-          // {
-          //   UnityEngine.Debug.Log("El valor " + x.Key    + " su valor " + x.Value);
-          // }
+        //   foreach(var x in keyValuePairs)
+         // {
+          //  UnityEngine.Debug.Log("El valor " + x.Key    + " su valor " + x.Value);
+         // }
         }
         if (result.Increase == true)
         {
@@ -259,15 +259,15 @@ public static void TargetsPropsEvaluate(List<Token> expression , List<GameObject
  CardUnidad cardUnidad = SourceGlobal[index].GetComponent<CardUnidad>();
  if(prop == "Power")
  {
-    if(expression[1].Type == TypeToken.Sum)
+    if(expression[1].Type == TypeToken.EqualSum)
     {
-      string temp = (string)expression[3].Value;
+      string temp = (string)expression[2].Value;
       int temp2 = int.Parse(temp);
       cardUnidad.Attack += temp2;
     }
-    else if(expression[1].Type == TypeToken.Rest)
+    else if(expression[1].Type == TypeToken.EqualRest)
     {
-      string temp = (string)expression[3].Value;
+      string temp = (string)expression[2].Value;
       int temp2 = int.Parse(temp);
       cardUnidad.Attack -= temp2;
     }

@@ -50,7 +50,8 @@ public class CompilerEffect: MonoBehaviour
       {
          if(NameEffect != null)
          {
-            //Error
+         SemanticAnalyzer.SemancticError = true;
+         Debug.Log("The Name field is required to declare an effect");
          }
         else if(actuallyToken[0].Type == TypeToken.Name)
          {
